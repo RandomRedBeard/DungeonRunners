@@ -54,7 +54,7 @@ namespace DR {
         unsigned int get_rrows() { return rrows; }
         unsigned int get_rcols() { return rcols; }
 
-        const std::map<int, Room> get_rooms() { return rooms; }
+        const std::map<int, Room>& get_rooms() { return rooms; }
         std::map<int, Room>::const_iterator find_room(int index) { return rooms.find(index); }
         const std::vector<Hallway> get_halls() { return halls; }
 

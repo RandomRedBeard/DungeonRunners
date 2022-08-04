@@ -17,6 +17,28 @@
 using namespace std;
 using namespace DR;
 
+class Wrap {
+	map<int, string> m;
+public:
+	void add(pair<int, string> p) {
+		m.insert(p);
+	}
+
+	const map<int, string>& get() { return m; }
+
+	map<int, string>::const_iterator find(int i) { return m.find(i); }
+};
+
+void test_iter() {
+	Wrap w;
+	w.add({ 1, "test" });
+
+	const map<int, string>& m = w.get();
+	map<int, string>::const_iterator iter = w.find(1);
+
+	assert(iter != m.end());
+}
+
 void test_json() {
 	srand(time(0));
 	Map m(80, 25, 3, 3);
@@ -24,11 +46,11 @@ void test_json() {
 
 	Map m1 = Serializable::from_json<Map>(o);
 
-	const std::map<int, Room> m1_rooms = m1.get_rooms();
+	const std::map<int, Room>& m1_rooms = m1.get_rooms();
 	std::map<int, Room>::const_iterator m1_end = m1_rooms.end();
 
 	for (std::pair<int, Room> r : m.get_rooms()) {
-		std::map<int, Room>::const_iterator iter = m1_rooms.find(r.first);
+		std::map<int, Room>::const_iterator iter = m1.find_room(r.first);
 		if (m1_end == iter) {
 			assert(0);
 		}
@@ -49,6 +71,7 @@ void test_room() {
 
 int main() {
 	test_json();
-	//test_room();
+	test_room();
+	test_iter();
 	return 0;
 }
