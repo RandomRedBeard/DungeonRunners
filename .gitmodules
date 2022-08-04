@@ -1,0 +1,6 @@
+[submodule "vendor/jansson"]
+	path = vendor/jansson
+	url = git@github.com:akheron/jansson.git
+[submodule "vendor/PDCursesMod"]
+	path = vendor/PDCursesMod
+	url = git@github.com:Bill-Gray/PDCursesMod.git
