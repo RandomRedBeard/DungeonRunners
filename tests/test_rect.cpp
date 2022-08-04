@@ -18,11 +18,14 @@
 using namespace std;
 using namespace DR;
 
-void test_constructor() {
-    
+void test_cmp() {
+    Rect r(0, 0, 12, 12);
+    Rect r1(0, 0, 12, 12);
+
+    assert(r == r1);
 }
 
 int main() {
-
+    test_cmp();
     return 0;
 }

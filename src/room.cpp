@@ -14,7 +14,9 @@ DR::Room::Room() : Rect() {
     lit = false;
 }
 
-DR::Room::Room(const Rect& r) : Rect(r) {}
+DR::Room::Room(const Rect& r) : Rect(r) {
+    lit = false;
+}
 
 DR::Room::Room(const Room& r) : Rect(r) {
     lit = r.lit;
