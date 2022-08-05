@@ -12,6 +12,7 @@
 #pragma once
 
 // unique_ptr include
+#include <memory>
 #include <map>
 #include <vector>
 #include <queue>
