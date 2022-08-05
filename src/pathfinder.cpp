@@ -44,7 +44,6 @@ std::vector<int> DR::Pathfinder::find_path(int src, int dest) const noexcept{
         auto iter = nodes.find(i);
         // Should never happen
         if (iter == nodes.end()) {
-            printf("Bad %d\n", i);
             q.pop();
             continue;
         }
