@@ -21,8 +21,6 @@ namespace DR {
         std::vector<Point> points;
     public:
         Hallway();
-        Hallway(const Hallway& h);
-        Hallway(Hallway&& h);
         virtual ~Hallway();
 
         void add_point(Point pt) { points.push_back(pt); }
@@ -33,7 +31,5 @@ namespace DR {
 
         bool operator==(const Hallway& h) const noexcept;
         bool operator!=(const Hallway& h) const noexcept;
-        Hallway operator=(const Hallway& h) noexcept;
-        Hallway operator=(Hallway&& h) noexcept;
     };
 }

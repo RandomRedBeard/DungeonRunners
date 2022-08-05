@@ -13,10 +13,6 @@
 
 DR::Hallway::Hallway() {}
 
-DR::Hallway::Hallway(const Hallway& h) : points(h.points) {}
-
-DR::Hallway::Hallway(Hallway&& h) : points(std::move(h.points)) {}
-
 DR::Hallway::~Hallway() {}
 
 json_t* DR::Hallway::to_json(json_t* o) const noexcept {
@@ -51,14 +47,4 @@ bool DR::Hallway::operator==(const Hallway& h) const noexcept {
 
 bool DR::Hallway::operator!=(const Hallway& h) const noexcept {
     return !(Hallway::operator==(h));
-}
-
-DR::Hallway DR::Hallway::operator=(const Hallway& h) noexcept {
-    points = h.points;
-    return *this;
-}
-
-DR::Hallway DR::Hallway::operator=(Hallway&& h) noexcept {
-    points = h.points;
-    return *this;
 }

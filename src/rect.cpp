@@ -14,10 +14,6 @@ DR::Rect::Rect(int x, int y, int w, int h) : x(x), y(y), w(w), h(h) {}
 
 DR::Rect::Rect() : Rect(0, 0, 0, 0) {}
 
-DR::Rect::Rect(const Rect& r) : Rect(r.x, r.y, r.w, r.h) {}
-
-DR::Rect::Rect(Rect&& r) : Rect(r.x, r.y, r.w, r.h) {}
-
 bool DR::Rect::contains(const Point pt) const noexcept {
     return pt.x >= x && pt.x < x + w && pt.y >= y && pt.y < y + h;
 }
@@ -63,22 +59,4 @@ bool DR::Rect::operator==(const Rect& r) const noexcept {
 
 bool DR::Rect::operator!=(const Rect& r) const noexcept {
     return !(this->operator==(r));
-}
-
-DR::Rect DR::Rect::operator=(const Rect& r) noexcept {
-    x = r.x;
-    y = r.y;
-    w = r.w;
-    h = r.h;
-
-    return *this;
-}
-
-DR::Rect DR::Rect::operator=(Rect&& r) noexcept {
-    x = r.x;
-    y = r.y;
-    w = r.w;
-    h = r.h;
-
-    return *this;
 }

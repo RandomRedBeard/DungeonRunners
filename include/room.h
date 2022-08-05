@@ -24,8 +24,6 @@ namespace DR {
     public:
         Room();
         Room(const Rect& r);
-        Room(const Room& r);
-        Room(Room&& r);
 
         bool isLit() const noexcept { return lit; };
 
@@ -44,7 +42,5 @@ namespace DR {
 
         bool operator==(const Room& r) const noexcept;
         bool operator!=(const Room& r) const noexcept;
-        Room operator=(const Room& r) noexcept;
-        Room operator=(Room&& pt) noexcept;
     };
 } // namespace DR 

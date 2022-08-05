@@ -15,10 +15,6 @@ DR::Point::Point(int x, int y) : x(x), y(y) {}
 
 DR::Point::Point() : Point(0, 0) {}
 
-DR::Point::Point(const Point& pt) : Point(pt.x, pt.y) {}
-
-DR::Point::Point(Point&& pt) : Point(pt.x, pt.y) {}
-
 DR::Point::~Point() {}
 
 double DR::Point::dist(const Point pt) const noexcept {
@@ -65,18 +61,6 @@ bool DR::Point::operator!=(const Point& pt) const noexcept {
     return !(this->operator==(pt));
 }
 
-DR::Point DR::Point::operator=(const Point& pt) noexcept {
-    x = pt.x;
-    y = pt.y;
-    return *this;
-}
-
-DR::Point DR::Point::operator=(Point&& pt) noexcept {
-    x = pt.x;
-    y = pt.y;
-    return *this;
-}
-
 DR::Point DR::Point::rand(int x_upper, int y_upper) {
     return Point(std::rand() % x_upper, std::rand() % y_upper);
 }
@@ -88,10 +72,6 @@ DR::Point DR::Point::index(int index, int width) {
 DR::DoublePoint::DoublePoint(double x, double y) : x(x), y(y) {}
 
 DR::DoublePoint::DoublePoint() : DoublePoint(0, 0) {}
-
-DR::DoublePoint::DoublePoint(const DoublePoint& pt) : DoublePoint(pt.x, pt.y) {}
-
-DR::DoublePoint::DoublePoint(DoublePoint&& pt) : DoublePoint(pt.x, pt.y) {}
 
 double DR::DoublePoint::dist(const DoublePoint pt) const noexcept {
     return std::sqrt(std::pow(x - pt.x, 2) + std::pow(y - pt.y, 2));

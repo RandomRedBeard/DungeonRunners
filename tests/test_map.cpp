@@ -44,7 +44,8 @@ void test_json() {
 	Map m(80, 25, 3, 3);
 	json_t* o = m.new_json();
 
-	Map m1 = Serializable::from_json<Map>(o);
+	Map m1;
+	m1.from_json(o);
 
 	const std::map<int, Room>& m1_rooms = m1.get_rooms();
 	std::map<int, Room>::const_iterator m1_end = m1_rooms.end();

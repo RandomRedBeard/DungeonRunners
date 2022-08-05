@@ -21,8 +21,6 @@ namespace DR {
         int x, y;
         Point(int x, int y);
         Point();
-        Point(const Point& pt);
-        Point(Point&& pt);
         virtual ~Point();
 
         /**
@@ -56,8 +54,6 @@ namespace DR {
 
         bool operator==(const Point& pt) const noexcept;
         bool operator!=(const Point& pt) const noexcept;
-        Point operator=(const Point& pt) noexcept;
-        Point operator=(Point&& pt) noexcept;
 
         /**
          * @brief Random point with given bounds
@@ -84,8 +80,6 @@ namespace DR {
         double x, y;
         DoublePoint(double x, double y);
         DoublePoint();
-        DoublePoint(const DoublePoint& pt);
-        DoublePoint(DoublePoint&& pt);
 
         /**
          * @brief Straight line distance
@@ -109,7 +103,5 @@ namespace DR {
 
         bool operator==(const DoublePoint& pt) const noexcept;
         bool operator!=(const DoublePoint& pt) const noexcept;
-        DoublePoint operator=(const DoublePoint& pt) noexcept;
-        DoublePoint operator=(DoublePoint&& pt) noexcept;
     };
 } // namespace DR

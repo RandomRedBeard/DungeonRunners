@@ -15,7 +15,7 @@ DR::Pathfinder::Pathfinder() {}
 
 DR::Pathfinder::Pathfinder(const T& nodes) : nodes(nodes) {}
 
-DR::Pathfinder::Pathfinder(const Pathfinder& p) : nodes(p.nodes) {}
+DR::Pathfinder::~Pathfinder() {}
 
 std::vector<int> DR::Pathfinder::find_path(int src, int dest) const noexcept{
     // visited bit map len

@@ -43,10 +43,8 @@ namespace DR {
         void build_map();
     public:
         Map();
-        Map(const Map& m) = delete;
-        Map(Map&& m);
         Map(unsigned int width, unsigned int height, unsigned int rcols, unsigned int rrows);
-        ~Map();
+        virtual ~Map();
 
         unsigned int get_height() { return height; }
         unsigned int get_width() { return width; }
@@ -56,9 +54,9 @@ namespace DR {
 
         const std::map<int, Room>& get_rooms() { return rooms; }
         std::map<int, Room>::const_iterator find_room(int index) { return rooms.find(index); }
-        const std::vector<Hallway> get_halls() { return halls; }
+        const std::vector<Hallway>& get_halls() { return halls; }
 
-        const Pathfinder get_pathfinder() { return pathfinder; }
+        const Pathfinder& get_pathfinder() { return pathfinder; }
 
         json_t* to_json(json_t* o) const noexcept;
         void from_json(const json_t* o);

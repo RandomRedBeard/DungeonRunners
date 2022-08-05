@@ -21,6 +21,13 @@ namespace DR {
         }
         virtual void from_json(const json_t*) = 0;
 
+        /**
+         * @brief Generic builder for basic types
+         * 
+         * @tparam T 
+         * @param o 
+         * @return T 
+         */
         template<typename T>
         static T from_json(const json_t* o) {
             T t;

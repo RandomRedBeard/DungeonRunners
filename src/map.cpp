@@ -13,22 +13,12 @@
 
 DR::Map::Map() {}
 
-DR::Map::Map(Map&& m) : width(m.width), height(m.height), rcols(m.rcols), rrows(m.rrows) {
-    rooms = std::move(m.rooms);
-    halls = std::move(m.halls);
-    
-    layout_bitmap = std::move(layout_bitmap);
-
-    pathfinder = std::move(pathfinder);
-}
-
 DR::Map::Map(unsigned int width, unsigned int height, unsigned int rcols, unsigned int rrows) : width(width), height(height), rcols(rcols), rrows(rrows) {
     build_map();
     connect_rooms();
     build_layout_bitmap();
     build_pathfinder();
 }
-
 
 DR::Map::~Map() {
 }

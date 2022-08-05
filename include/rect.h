@@ -20,8 +20,6 @@ namespace DR {
         int x, y, w, h;
         Rect(int x, int y, int w, int h);
         Rect();
-        Rect(const Rect& r);
-        Rect(Rect&& r);
 
         bool contains(const Point pt) const noexcept;
         unsigned int area() const noexcept;
@@ -31,8 +29,6 @@ namespace DR {
 
         bool operator==(const Rect& r) const noexcept;
         bool operator!=(const Rect& r) const noexcept;
-        Rect operator=(const Rect& r) noexcept;
-        Rect operator=(Rect&& pt) noexcept;
 
     };
 } // namespace DR 

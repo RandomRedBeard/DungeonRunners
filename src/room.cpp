@@ -18,24 +18,6 @@ DR::Room::Room(const Rect& r) : Rect(r) {
     lit = false;
 }
 
-DR::Room::Room(const Room& r) : Rect(r) {
-    lit = r.lit;
-
-    no = r.no;
-    so = r.so;
-    ea = r.ea;
-    we = r.we;
-}
-
-DR::Room::Room(Room&& r) : Rect(r) {
-    lit = r.lit;
-
-    no = r.no;
-    so = r.so;
-    ea = r.ea;
-    we = r.we;
-}
-
 json_t* DR::Room::to_json(json_t* o) const noexcept {
     Rect::to_json(o);
 
@@ -87,24 +69,4 @@ bool DR::Room::operator==(const Room& r) const noexcept {
 
 bool DR::Room::operator!=(const Room& r) const noexcept {
     return !(this->operator==(r));
-}
-
-DR::Room DR::Room::operator=(const Room& r) noexcept {
-    Rect::operator=(r);
-    lit = r.lit;
-    no = r.no;
-    so = r.so;
-    ea = r.ea;
-    we = r.we;
-    return *this;
-}
-
-DR::Room DR::Room::operator=(Room&& r) noexcept {
-    Rect::operator=(r);
-    lit = r.lit;
-    no = r.no;
-    so = r.so;
-    ea = r.ea;
-    we = r.we;
-    return *this;
 }

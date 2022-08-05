@@ -26,7 +26,7 @@ namespace DR {
     public:
         Pathfinder();
         Pathfinder(const T& nodes);
-        Pathfinder(const Pathfinder& p);
+        virtual ~Pathfinder();
 
         std::vector<int> find_path(int src, int dest) const noexcept;
     };
