@@ -26,6 +26,7 @@ void test_json() {
 
     puts(buf);
     json_decref(o);
+    free(buf);
 }
 
 int main() {
