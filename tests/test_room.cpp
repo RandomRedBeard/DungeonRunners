@@ -25,6 +25,7 @@ void test_json() {
     char* buf = json_dumps(o, JSON_INDENT(4));
 
     puts(buf);
+    json_decref(o);
 }
 
 int main() {
