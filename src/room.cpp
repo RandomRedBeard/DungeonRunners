@@ -18,6 +18,10 @@ DR::Room::Room(const Rect& r) : Rect(r) {
     lit = false;
 }
 
+DR::Point DR::Room::rand_point() const noexcept {
+    return { x + 1 + rand() % (w - 2), y + 1 + rand() % (h - 2) };
+}
+
 json_t* DR::Room::to_json(json_t* o) const noexcept {
     Rect::to_json(o);
 

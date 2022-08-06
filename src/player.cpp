@@ -12,8 +12,6 @@
 
 DR::Player::Player() {}
 
-DR::Player::Player(std::string name) : name(name) {}
-
 json_t* DR::Player::to_json(json_t* o) const noexcept {
     json_object_set_new(o, "name", json_string(name.c_str()));
     pt.to_json(o);

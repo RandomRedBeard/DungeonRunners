@@ -24,37 +24,50 @@ DR::Map::~Map() {
 }
 
 void DR::Map::build_layout_bitmap() {
-    unsigned int len = ((width * height) / 8) + 1;
+    unsigned int len = width * height;
     layout_bitmap = std::make_unique<char[]>(len);
+    char* bm = layout_bitmap.get();
+    memset(bm, ' ', len);
 
     for (std::pair<int, Room> p : rooms) {
         Room r = p.second;
         for (int i = 1; i < r.w - 1; i++) {
             for (int j = 1; j < r.h - 1; j++) {
-                bit_flip(layout_bitmap.get(), Point::index(i + r.x, j + r.y, width));
+                *(bm + Point::index(i + r.x, j + r.y, width)) = FLOOR;
             }
         }
 
+        // Ceilings are one above
+        for (int i = 1; i < r.h - 1; i++) {
+            *(bm + Point::index(r.x, i + r.y, width)) = VWALL;
+            *(bm + Point::index(r.x + r.w - 1, i + r.y, width)) = VWALL;
+        }
+
+        for (int i = 0; i < r.w; i++) {
+            *(bm + Point::index(r.x + i, r.y, width)) = HWALL;
+            *(bm + Point::index(r.x + i, r.y + r.h - 1, width)) = HWALL;
+        }
+
         if (r.getEa().x > 0) {
-            bit_flip(layout_bitmap.get(), r.getEa().index(width));
+            *(bm + r.getEa().index(width)) = ENTR;
         }
 
         if (r.getSo().x > 0) {
-            bit_flip(layout_bitmap.get(), r.getSo().index(width));
+            *(bm + r.getSo().index(width)) = ENTR;
         }
 
         if (r.getWe().x > 0) {
-            bit_flip(layout_bitmap.get(), r.getWe().index(width));
+            *(bm + r.getWe().index(width)) = ENTR;
         }
 
         if (r.getNo().x > 0) {
-            bit_flip(layout_bitmap.get(), r.getNo().index(width));
+            *(bm + r.getNo().index(width)) = ENTR;
         }
     }
 
     for (Hallway h : halls) {
         for (Point p : h.get_points()) {
-            bit_flip(layout_bitmap.get(), p.index(width));
+            *(bm + p.index(width)) = HALL;
         }
     }
 }
@@ -65,26 +78,26 @@ void DR::Map::build_pathfinder() {
     std::map<int, std::vector<int>> nodes;
 
     for (unsigned int i = 0; i < len; i++) {
-        if (!is_bit_flipped(layout_bitmap.get(), i)) {
-            continue;
+        if (!is_walkable(i)) {
+            continue;;
         }
 
         std::vector<int> neighbors;
 
         // Up
-        if (i - width >= 0 && is_bit_flipped(layout_bitmap.get(), i - width)) {
+        if (i - width >= 0 && is_walkable(i - width)) {
             neighbors.push_back(i - width);
         }
 
-        if (i + width < len && is_bit_flipped(layout_bitmap.get(), i + width)) {
+        if (i + width < len && is_walkable(i + width)) {
             neighbors.push_back(i + width);
         }
 
-        if (i % width != 0 && is_bit_flipped(layout_bitmap.get(), i - 1)) {
+        if (i % width != 0 && is_walkable(i - 1)) {
             neighbors.push_back(i - 1);
         }
 
-        if (i % width != width - 1 && is_bit_flipped(layout_bitmap.get(), i + 1)) {
+        if (i % width != width - 1 && is_walkable(i + 1)) {
             neighbors.push_back(i + 1);
         }
 
@@ -235,6 +248,21 @@ void DR::Map::build_map() {
             rooms.insert({ index, r });
         }
     }
+}
+
+
+bool DR::Map::is_walkable(int index) const noexcept {
+    // Very safe
+    return strchr(".#+", *(layout_bitmap.get() + index));
+}
+
+
+bool DR::Map::is_walkable(Point pt) const noexcept {
+    return is_walkable(pt.index(width));
+}
+
+char DR::Map::get_point(Point pt) const noexcept {
+    return *(layout_bitmap.get() + pt.index(width));
 }
 
 json_t* DR::Map::to_json(json_t* o) const noexcept {

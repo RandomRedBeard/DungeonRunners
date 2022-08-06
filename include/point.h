@@ -17,6 +17,10 @@
 #include <serializable.h>
 
 namespace DR {
+    enum Direction {
+        LEFT, RIGHT, UP, DOWN
+    };
+
     struct Point : public Serializable {
         int x, y;
         Point(int x, int y);
@@ -48,6 +52,8 @@ namespace DR {
          * @return int
          */
         int index(int width) const noexcept;
+
+        Point move(Direction d) const noexcept;
 
         json_t* to_json(json_t* o) const noexcept;
         void from_json(const json_t* o);

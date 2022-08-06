@@ -34,6 +34,20 @@ int DR::Point::index(int width) const noexcept {
     return y * width + x;
 }
 
+DR::Point DR::Point::move(Direction d) const noexcept {
+    switch (d)
+    {
+    case LEFT:
+        return { x - 1, y };
+    case RIGHT:
+        return { x + 1, y };
+    case UP:
+        return { x, y - 1 };
+    case DOWN:
+        return { x, y + 1 };
+    }
+}
+
 json_t* DR::Point::to_json(json_t* root) const noexcept {
     json_object_set_new(root, "x", json_integer(x));
     json_object_set_new(root, "y", json_integer(y));

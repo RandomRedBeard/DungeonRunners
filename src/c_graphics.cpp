@@ -141,41 +141,27 @@ int DR::CGraphics::put_hallway(std::string win, const Hallway h, char c) {
     return put_hallway(iter->second, h, c);
 }
 
-void DR::CGraphics::set_logger(const Rect r) {
-    logger = newwin(r.h, r.w, r.y, r.x);
+int DR::CGraphics::put_map(WINDOW* win, const Map& m, const CGraphicsRoomConfig cfg, char c) {
+    for (std::pair<int, Room> r : m.get_rooms()) {
+        put_room(win, r.second, cfg);
+    }
+
+    for (Hallway h : m.get_halls()) {
+        put_hallway(win, h, c);
+    }
+
+    return 0;
 }
 
-int DR::CGraphics::log(const char* fmt, ...) {
-    WINDOW* w = logger;
-    if (!w) {
+int DR::CGraphics::put_map(std::string win, const Map& m, const CGraphicsRoomConfig cfg, char c) {
+    std::map<std::string, WINDOW*>::iterator iter = windows.find(win);
+    if (iter == windows.end()) {
         return -1;
     }
 
-    va_list args;
-    va_start(args, fmt);
-    int len = vsnprintf(nullptr, 0, fmt, args);
-    va_end(args);
-
-    va_start(args, fmt);
-    char* buf = (char*)malloc(len + 1);
-    vsnprintf(buf, len + 1, fmt, args);
-    va_end(args);
-
-    int max_y = getmaxx(w);
-    int lines_to_print = (len / max_y) + 1;
-
-    for (int i = 0; i < lines_to_print; i++) {
-        wmove(w, 0, 0);
-        winsertln(w);
-    }
-
-    mvwaddstr(w, 0, 0, buf);
-    free(buf);
-
-    wrefresh(w);
-
-    return len;
+    return put_map(iter->second, m, cfg, c);
 }
+
 
 int DR::CGraphics::cgetch(std::string win) {
     std::map<std::string, WINDOW*>::iterator iter = windows.find(win);

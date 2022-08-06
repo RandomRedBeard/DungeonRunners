@@ -11,7 +11,7 @@
 
 #pragma once
 
-// unique_ptr include
+ // unique_ptr include
 #include <memory>
 #include <map>
 
@@ -22,7 +22,14 @@
 #include <pathfinder.h>
 
 namespace DR {
+
     class Map : public Serializable {
+        const static char FLOOR = '.';
+        const static char HALL = '#';
+        const static char VWALL = '|';
+        const static char HWALL = '-';
+        const static char ENTR = '+';
+
         // Phys-map attrs
         unsigned int width, height;
         // Room dims
@@ -52,11 +59,16 @@ namespace DR {
         unsigned int get_rrows() { return rrows; }
         unsigned int get_rcols() { return rcols; }
 
-        const std::map<int, Room>& get_rooms() { return rooms; }
+        const std::map<int, Room>& get_rooms() const noexcept { return rooms; }
         std::map<int, Room>::const_iterator find_room(int index) { return rooms.find(index); }
-        const std::vector<Hallway>& get_halls() { return halls; }
+        const std::vector<Hallway>& get_halls() const noexcept { return halls; }
 
         const Pathfinder& get_pathfinder() { return pathfinder; }
+
+        bool is_walkable(int index) const noexcept;
+        bool is_walkable(Point pt) const noexcept;
+
+        char get_point(Point pt) const noexcept;
 
         json_t* to_json(json_t* o) const noexcept;
         void from_json(const json_t* o);

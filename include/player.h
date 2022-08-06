@@ -22,10 +22,12 @@ namespace DR {
         std::string name;
     public:
         Player();
-        Player(std::string name);
 
-        void setPoint(Point pt) { this->pt = pt; }
-        Point getPoint() const noexcept { return pt; };
+        void set_name(std::string name) noexcept { this->name = name; }
+        std::string get_name() const noexcept { return name; }
+
+        void set_point(Point pt) noexcept { this->pt = pt; }
+        Point get_point() const noexcept { return pt; };
 
         json_t* to_json(json_t* o) const noexcept;
         void from_json(const json_t* o);

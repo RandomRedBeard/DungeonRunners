@@ -47,6 +47,7 @@ namespace DR {
         int put(WINDOW* win, const Rect r, const CGraphicsRectConfig cfg);
         int put_room(WINDOW* win, const Room r, const CGraphicsRoomConfig cfg);
         int put_hallway(WINDOW* win, const Hallway h, char c);
+        int put_map(WINDOW* win, const Map& m, const CGraphicsRoomConfig cfg, char c);
     public:
         CGraphics();
         CGraphics(const CGraphics& c) = delete;
@@ -57,8 +58,7 @@ namespace DR {
         int put(std::string win, const Rect r, const CGraphicsRectConfig cfg);
         int put_room(std::string win, const Room r, const CGraphicsRoomConfig cfg);
         int put_hallway(std::string win, const Hallway h, char c);
-        void set_logger(const Rect r);
-        int log(const char* fmt, ...);
+        int put_map(std::string win, const Map& m, const CGraphicsRoomConfig cfg, char h);
         int cgetch(std::string win);
     };
 }
