@@ -265,6 +265,13 @@ char DR::Map::get_point(Point pt) const noexcept {
     return *(layout_bitmap.get() + pt.index(width));
 }
 
+DR::Point DR::Map::rand_point() const noexcept {
+    auto it = rooms.begin();
+    std::advance(it, std::rand() % rooms.size());
+    Room r = it->second;
+    return r.rand_point();
+}
+
 json_t* DR::Map::to_json(json_t* o) const noexcept {
     json_t* json_rooms = json_array();
 

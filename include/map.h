@@ -63,13 +63,14 @@ namespace DR {
         const std::map<int, Room>& get_rooms() const noexcept { return rooms; }
         std::map<int, Room>::const_iterator find_room(int index) { return rooms.find(index); }
         const std::vector<Hallway>& get_halls() const noexcept { return halls; }
-
-        const Pathfinder& get_pathfinder() { return pathfinder; }
+        const Pathfinder& get_pathfinder() const noexcept { return pathfinder; }
 
         bool is_walkable(int index) const noexcept;
         bool is_walkable(Point pt) const noexcept;
 
         char get_point(Point pt) const noexcept;
+
+        Point rand_point() const noexcept;
 
         json_t* to_json(json_t* o) const noexcept;
         void from_json(const json_t* o);

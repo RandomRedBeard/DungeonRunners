@@ -53,22 +53,23 @@ int main(int argc, char** argv) {
     c.put_map("map", m, CGraphicsRoomConfig(), '#');
 
     Player p;
-    Point pt = m.get_rooms().begin()->second.rand_point();
+    Point pt = m.rand_point();
     p.set_point(pt);
 
-    Monster mo("Ice Monster");
-    pt = m.get_rooms().begin()->second.rand_point();
-    mo.set_point(pt);
-
-    Monster mo1("Ice Monster");
-    pt = m.get_rooms().begin()->second.rand_point();
-    mo1.set_point(pt);
-
+    vector<Monster*> monsters;
+    vector<thread> mts;
     mutex mu;
 
-    thread mt(monster_thread, &c, &m, &p, &mo, &mu);
-    thread mt1(monster_thread, &c, &m, &p, &mo1, &mu);
 
+    for (int i = 0; i < 10; i++) {
+        Monster* mo = new Monster("Ice Monster");
+        pt = m.rand_point();
+        mo->set_point(pt);
+        thread mt(monster_thread, &c, &m, &p, mo, &mu);
+
+        monsters.push_back(mo);
+        mts.push_back(move(mt));
+    }
 
     c.put("map", p.get_point(), '@');
 
@@ -106,8 +107,10 @@ int main(int argc, char** argv) {
     }
 
     END = true;
-    mt.join();
-    mt1.join();
+
+    for (thread& i : mts) {
+        i.join();
+    }
 
     return 0;
 }
