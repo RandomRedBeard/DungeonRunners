@@ -32,7 +32,7 @@ else()
     set(CURSES "${CURSES_CURSES_LIBRARY}")
 endif()
 
-if (not MSVC and not APPLE)
+if (UNIX)
     find_library(UUID uuid)
     message("${UUID}")
 endif()
