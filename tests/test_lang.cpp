@@ -6,6 +6,6 @@ namespace Test {
 }
 
 int main() {
-    Test::myint i = 0;
+    Test::myint i = 1;
     assert(i);
 }
