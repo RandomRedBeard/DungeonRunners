@@ -23,7 +23,7 @@ namespace DR {
     class Monster : public Serializable {
         std::string name;
         Point pt;
-        Speed speed = NORMAL;
+        int speed = NORMAL;
         std::chrono::steady_clock::time_point last_moved;
     public:
         Monster(std::string name);
@@ -31,8 +31,8 @@ namespace DR {
         void set_point(Point pt) noexcept { this->pt = pt; }
         Point get_point() const noexcept { return pt; };
 
-        const Speed get_speed() const noexcept { return speed; }
-        void set_speed(Speed speed) { this->speed = speed; }
+        int get_speed() const noexcept { return speed; }
+        void set_speed(int speed) { this->speed = speed; }
 
         const std::chrono::steady_clock::time_point get_last_moved() const noexcept { return last_moved; }
         void set_last_moved(std::chrono::steady_clock::time_point tm) { last_moved = tm; }

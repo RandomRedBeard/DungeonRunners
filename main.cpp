@@ -15,33 +15,34 @@ bool END = false;
 using namespace std;
 using namespace DR;
 
-// void monster_thread(CGraphics* g, Map* m, Player* p, std::vector<Monster>* monsters, mutex* mu) {
-
-// }
-
-void monster_thread(CGraphics* g, Map* m, Player* p, shared_ptr<Monster> me, mutex* mu) {
-    Map::MapPath path = m->find_path(me->get_point(), p->get_point());
-
+void monster_thread(CGraphics* g, Map* m, Player* p, std::vector<Monster>* monsters, mutex* mu) {
+    int i = 0;
     while (!END) {
-        this_thread::sleep_for(chrono::milliseconds(250));
+        this_thread::sleep_for(chrono::milliseconds(500));
+        auto now = chrono::steady_clock::now();
+        for (Monster& me : *monsters) {
+            auto dur = now - me.get_last_moved();
+            auto i_millis = std::chrono::duration_cast<std::chrono::milliseconds>(dur);
+            if (i_millis.count() <= me.get_speed()) {
+                continue;
+            }
 
-        if (path.empty()) {
-            path = m->find_path(me->get_point(), p->get_point());
+            mvprintw(50 + (i % 5), 0, "%d - %d ", i_millis.count(), me.get_speed());
+            refresh();
+            i++;
+            me.set_last_moved(now);
+            Map::MapPath path = m->find_path(me.get_point(), p->get_point());
+
+            if (path.empty()) {
+                continue;
+            }
+
+            lock_guard<mutex> lock(*mu);
+            Point dest = path.pop();
+            g->put("map", me.get_point(), m->get_point(me.get_point()));
+            me.set_point(dest);
+            g->put("map", me.get_point(), 'M');
         }
-
-        if (path.get_dest().dist(p->get_point()) > 3) {
-            path = m->find_path(me->get_point(), p->get_point());
-        }
-
-        if (path.empty()) {
-            continue;
-        }
-
-        lock_guard<mutex> lock(*mu);
-        Point dest = path.pop();
-        g->put("map", me->get_point(), m->get_point(me->get_point()));
-        me->set_point(dest);
-        g->put("map", me->get_point(), 'M');
     }
 }
 
@@ -60,21 +61,22 @@ int main(int argc, char** argv) {
     Point pt = m.rand_point();
     p.set_point(pt);
 
-    vector<shared_ptr<Monster>> monsters;
-    vector<thread> mts;
+    vector<Monster> monsters;
+    // vector<thread> mts;
     mutex mu;
 
 
     for (int i = 0; i < 10; i++) {
-        shared_ptr<Monster> mo = make_shared<Monster>("Ice Monster");
+        Monster mo("Ice Monster");
         pt = m.rand_point();
-        mo->set_point(pt);
+        mo.set_point(pt);
+        mo.set_last_moved(chrono::steady_clock::now());
+        mo.set_speed(500 * (1 + rand() % 3));
 
         monsters.push_back(mo);
-
-        thread mt(monster_thread, &c, &m, &p, mo, &mu);
-        mts.push_back(move(mt));
     }
+
+    thread mt(monster_thread, &c, &m, &p, &monsters, &mu);
 
     c.put("map", p.get_point(), '@');
 
@@ -112,10 +114,7 @@ int main(int argc, char** argv) {
     }
 
     END = true;
-
-    for (thread& i : mts) {
-        i.join();
-    }
+    mt.join();
 
     return 0;
 }
