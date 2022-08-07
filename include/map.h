@@ -21,6 +21,7 @@
 #include <room.h>
 #include <hallway.h>
 #include <pathfinder.h>
+#include <monster.h>
 
 namespace DR {
 

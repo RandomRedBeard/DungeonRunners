@@ -15,11 +15,15 @@ bool END = false;
 using namespace std;
 using namespace DR;
 
-void monster_thread(CGraphics* g, Map* m, Player* p, Monster* me, mutex* mu) {
+// void monster_thread(CGraphics* g, Map* m, Player* p, std::vector<Monster>* monsters, mutex* mu) {
+
+// }
+
+void monster_thread(CGraphics* g, Map* m, Player* p, shared_ptr<Monster> me, mutex* mu) {
     Map::MapPath path = m->find_path(me->get_point(), p->get_point());
 
     while (!END) {
-        this_thread::sleep_for(chrono::seconds(1));
+        this_thread::sleep_for(chrono::milliseconds(250));
 
         if (path.empty()) {
             path = m->find_path(me->get_point(), p->get_point());
@@ -56,18 +60,19 @@ int main(int argc, char** argv) {
     Point pt = m.rand_point();
     p.set_point(pt);
 
-    vector<Monster*> monsters;
+    vector<shared_ptr<Monster>> monsters;
     vector<thread> mts;
     mutex mu;
 
 
     for (int i = 0; i < 10; i++) {
-        Monster* mo = new Monster("Ice Monster");
+        shared_ptr<Monster> mo = make_shared<Monster>("Ice Monster");
         pt = m.rand_point();
         mo->set_point(pt);
-        thread mt(monster_thread, &c, &m, &p, mo, &mu);
 
         monsters.push_back(mo);
+
+        thread mt(monster_thread, &c, &m, &p, mo, &mu);
         mts.push_back(move(mt));
     }
 
