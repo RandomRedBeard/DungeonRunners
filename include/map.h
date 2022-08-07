@@ -14,6 +14,7 @@
  // unique_ptr include
 #include <memory>
 #include <map>
+#include <cstring>
 
 #include <util.h>
 #include <serializable.h>
