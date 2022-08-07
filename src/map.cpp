@@ -332,3 +332,24 @@ void DR::Map::from_json(const json_t* o) {
         rrows = json_integer_value(json_rrows);
     }
 }
+
+DR::Point DR::Map::MapPath::pop() {
+    int i = path.pop();
+    if (i == -1) {
+        return Point();
+    }
+
+    return Point::index(i, width);
+}
+
+DR::Point DR::Map::MapPath::get_src() const noexcept {
+    return Point::index(path.get_src(), width);
+}
+
+DR::Point DR::Map::MapPath::get_dest() const noexcept {
+    return Point::index(path.get_dest(), width);
+}
+
+DR::Map::MapPath DR::Map::find_path(Point src, Point dest) {
+    return Map::MapPath(pathfinder.find_path(src.index(width), dest.index(width)), width);
+}

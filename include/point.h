@@ -18,7 +18,7 @@
 
 namespace DR {
     enum Direction {
-        LEFT, RIGHT, UP, DOWN
+        LEFT, RIGHT, UP, DOWN, NONE
     };
 
     struct Point : public Serializable {

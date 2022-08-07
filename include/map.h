@@ -72,5 +72,24 @@ namespace DR {
 
         json_t* to_json(json_t* o) const noexcept;
         void from_json(const json_t* o);
+
+        class MapPath {
+            Pathfinder::Path path;
+            int width;
+        public:
+            MapPath(Pathfinder::Path path, int width) : path(path), width(width) {};
+            /**
+             * @brief Requires empty check for safety
+             *
+             * @return Point
+             */
+            Point pop();
+            bool empty() const noexcept { return path.empty(); }
+
+            Point get_src() const noexcept;
+            Point get_dest() const noexcept;
+        };
+
+        MapPath find_path(Point src, Point dest);
     };
 } // namespace DR

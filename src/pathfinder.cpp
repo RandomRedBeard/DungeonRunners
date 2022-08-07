@@ -11,13 +11,26 @@
 
 #include "pathfinder.h"
 
+int DR::Pathfinder::Path::pop() {
+    if (path.empty()) {
+        return -1;
+    }
+
+    int i = path.top();
+    path.pop();
+    return i;
+}
+
 DR::Pathfinder::Pathfinder() {}
 
 DR::Pathfinder::Pathfinder(const T& nodes) : nodes(nodes) {}
 
 DR::Pathfinder::~Pathfinder() {}
 
-std::vector<int> DR::Pathfinder::find_path(int src, int dest) const noexcept{
+DR::Pathfinder::Path DR::Pathfinder::find_path(int src, int dest) const noexcept {
+    if (src == dest) {
+        return Path(src, dest);
+    }
     // visited bit map len
     unsigned int vlen = (nodes.rbegin()->first / 8) + 1;
     // visited bit map
@@ -27,7 +40,7 @@ std::vector<int> DR::Pathfinder::find_path(int src, int dest) const noexcept{
     // Result mapping 
     std::map<int, int> rmap;
     // src to dest path
-    std::vector<int> rpath;
+    std::stack<int> rpath;
 
     bool found = false;
 
@@ -63,15 +76,15 @@ std::vector<int> DR::Pathfinder::find_path(int src, int dest) const noexcept{
     }
 
     if (!found) {
-        return rpath;
+        return Path(rpath, src, dest);
     }
 
     // fill out rpath
-    int i = dest;
+    int i = rmap[dest];
     while (i != src) {
-        rpath.insert(rpath.begin(), i);
+        rpath.push(i);
         i = rmap[i];
     }
 
-    return rpath;
+    return Path(rpath, src, dest);
 }

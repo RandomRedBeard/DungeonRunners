@@ -45,6 +45,8 @@ DR::Point DR::Point::move(Direction d) const noexcept {
         return { x, y - 1 };
     case DOWN:
         return { x, y + 1 };
+    case NONE:
+        return { x, y };
     }
 }
 
