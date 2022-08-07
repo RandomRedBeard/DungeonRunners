@@ -11,6 +11,8 @@
 #pragma once
 
 #ifdef WIN32
+#pragma comment(lib, "rpcrt4.lib")  // UuidCreate - Minimum supported OS Win 2000
+#include <windows.h>
 #else
 #include <uuid/uuid.h>
 #endif

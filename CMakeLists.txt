@@ -32,6 +32,11 @@ else()
     set(CURSES "${CURSES_CURSES_LIBRARY}")
 endif()
 
+if (not MSVC and not APPLE)
+    find_library(UUID uuid)
+    message("${UUID}")
+endif()
+
 # Add links
 set(DR_LINKS ${DR_LINKS} ${CURSES} ${JANSSON_LIBRARIES})
 
