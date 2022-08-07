@@ -48,6 +48,9 @@ DR::Point DR::Point::move(Direction d) const noexcept {
     case NONE:
         return { x, y };
     }
+
+    // Warning
+    return {x, y};
 }
 
 json_t* DR::Point::to_json(json_t* root) const noexcept {

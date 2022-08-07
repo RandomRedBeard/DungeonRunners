@@ -5,5 +5,6 @@ namespace Test {
 }
 
 int main() {
-    Test::myint;
+    Test::myint i = 0;
+    assert(i);
 }
