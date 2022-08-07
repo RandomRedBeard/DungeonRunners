@@ -34,7 +34,7 @@ endif()
 
 if (UNIX)
     find_library(UUID uuid)
-    message("${UUID}")
+    set(DR_LINKS ${DR_LINKS} ${UUID})
 endif()
 
 # Add links
