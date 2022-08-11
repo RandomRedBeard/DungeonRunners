@@ -32,7 +32,7 @@ else()
     set(CURSES "${CURSES_CURSES_LIBRARY}")
 endif()
 
-if (UNIX)
+if (UNIX AND NOT APPLE)
     find_library(UUID uuid)
     set(DR_LINKS ${DR_LINKS} ${UUID})
 endif()

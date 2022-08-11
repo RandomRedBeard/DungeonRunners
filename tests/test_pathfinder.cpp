@@ -15,12 +15,12 @@
 #include <pathfinder.h>
 
 void test_same_points() {
-    DR::Map m(80, 25, 3, 3);
+    DR::Map m(DR::OID::generate(), 80, 25, 3, 3);
     DR::Pathfinder p = m.get_pathfinder();
 
     DR::Point r = m.get_rooms().begin()->second.rand_point();
 
-    DR::Pathfinder::Path path = p.find_path(r.index(m.get_width()), r.index(m.get_width()));
+    std::stack<int> path = p.find_path(r.index(m.get_width()), r.index(m.get_width()));
     assert(path.empty());
 }
 

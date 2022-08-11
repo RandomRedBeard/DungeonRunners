@@ -14,6 +14,12 @@
 #include <cstdlib>
 
 namespace DR {
+    enum Speed {
+        SLOW = 1500,
+        NORMAL = 1000,
+        FAST = 500
+    };
+
     /**
      * @brief Dice roll where p is a probability 0-1
      *

@@ -21,17 +21,16 @@ void monster_thread(CGraphics* g, Map* m, Player* p, std::vector<Monster>* monst
         this_thread::sleep_for(chrono::milliseconds(500));
         auto now = chrono::steady_clock::now();
         for (Monster& me : *monsters) {
-            auto dur = now - me.get_last_moved();
-            auto i_millis = std::chrono::duration_cast<std::chrono::milliseconds>(dur);
+            auto i_millis = std::chrono::duration_cast<std::chrono::milliseconds>(now - me.get_last_moved());
             if (i_millis.count() <= me.get_speed()) {
                 continue;
             }
 
-            mvprintw(50 + (i % 5), 0, "%d - %d ", i_millis.count(), me.get_speed());
+            mvprintw(50 + (i % 5), 0, "%d - %d   ", i_millis.count(), me.get_speed());
             refresh();
             i++;
             me.set_last_moved(now);
-            Map::MapPath path = m->find_path(me.get_point(), p->get_point());
+            PointPath path = m->find_path(me.get_point(), p->get_point());
 
             if (path.empty()) {
                 continue;
@@ -47,14 +46,12 @@ void monster_thread(CGraphics* g, Map* m, Player* p, std::vector<Monster>* monst
 }
 
 int main(int argc, char** argv) {
-
     srand(time(0));
 
-    Map m(150, 40, 7, 5);
+    Map m(OID::generate(), 150, 40, 7, 5);
 
     CGraphics c;
     c.addwin("map", { 0, 0, (int)m.get_width(), (int)m.get_height() });
-
     c.put_map("map", m, CGraphicsRoomConfig(), '#');
 
     Player p;

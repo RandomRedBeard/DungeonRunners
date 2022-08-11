@@ -21,21 +21,19 @@
 #include <room.h>
 #include <hallway.h>
 #include <pathfinder.h>
-#include <monster.h>
+#include <pointpath.h>
+#include <oid.h>
 
 namespace DR {
 
     class Map : public Serializable {
-        const static char FLOOR = '.';
-        const static char HALL = '#';
-        const static char VWALL = '|';
-        const static char HWALL = '-';
-        const static char ENTR = '+';
-
+        OID id;
         // Phys-map attrs
         unsigned int width, height;
         // Room dims
         unsigned int rcols, rrows;
+
+        // Physmap
         std::map<int, Room> rooms;
         std::vector<Hallway> halls;
 
@@ -51,9 +49,17 @@ namespace DR {
         void connect_rooms();
         void build_map();
     public:
+        const static char FLOOR = '.';
+        const static char HALL = '#';
+        const static char VWALL = '|';
+        const static char HWALL = '-';
+        const static char ENTR = '+';
+
         Map();
-        Map(unsigned int width, unsigned int height, unsigned int rcols, unsigned int rrows);
+        Map(OID id, unsigned int width, unsigned int height, unsigned int rcols, unsigned int rrows);
         virtual ~Map();
+
+        const OID get_id() { return id; }
 
         unsigned int get_height() { return height; }
         unsigned int get_width() { return width; }
@@ -71,28 +77,16 @@ namespace DR {
 
         char get_point(Point pt) const noexcept;
 
+        /**
+         * @brief Utility method for placing on map
+         *
+         * @return Point
+         */
         Point rand_point() const noexcept;
 
         json_t* to_json(json_t* o) const noexcept;
         void from_json(const json_t* o);
 
-        class MapPath {
-            Pathfinder::Path path;
-            int width;
-        public:
-            MapPath(Pathfinder::Path path, int width) : path(path), width(width) {};
-            /**
-             * @brief Requires empty check for safety
-             *
-             * @return Point
-             */
-            Point pop();
-            bool empty() const noexcept { return path.empty(); }
-
-            Point get_src() const noexcept;
-            Point get_dest() const noexcept;
-        };
-
-        MapPath find_path(Point src, Point dest);
+        PointPath find_path(Point src, Point dest);
     };
 } // namespace DR

@@ -13,13 +13,14 @@
 
 #include <iostream>
 
-DR::OID::OID() {
+DR::OID DR::OID::generate() {
+    OID id;
 #ifdef WIN32
-    UUID uuid;
+    OID uuid;
     UuidCreate(&uuid);
     char* str;
     UuidToStringA(&uuid, (RPC_CSTR*)&str);
-    id = str;
+    id.id = str;
     RpcStringFreeA((RPC_CSTR*)&str);
 #else
     // trailing zero
@@ -27,9 +28,10 @@ DR::OID::OID() {
     uuid_t uuid;
     uuid_generate_random(uuid);
     uuid_unparse(uuid, buf);
-    id = (char*)buf;
+    id.id = (char*)buf;
     uuid_clear(uuid);
 #endif
+    return id;
 }
 
 json_t* DR::OID::to_json(json_t* o) const noexcept {
@@ -51,4 +53,8 @@ bool DR::OID::operator==(const OID& o) const noexcept {
 
 bool DR::OID::operator!=(const OID& o) const noexcept {
     return id != o.id;
+}
+
+bool DR::OID::operator<(const OID& o) const noexcept {
+    return id < o.id;
 }

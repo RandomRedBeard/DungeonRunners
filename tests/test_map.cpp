@@ -41,7 +41,7 @@ void test_iter() {
 
 void test_json() {
 	srand(time(0));
-	Map m(80, 25, 3, 3);
+	Map m(OID::generate(), 80, 25, 3, 3);
 	json_t* o = m.new_json();
 
 	Map m1;

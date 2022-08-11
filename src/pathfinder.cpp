@@ -11,25 +11,15 @@
 
 #include "pathfinder.h"
 
-int DR::Pathfinder::Path::pop() {
-    if (path.empty()) {
-        return -1;
-    }
-
-    int i = path.top();
-    path.pop();
-    return i;
-}
-
 DR::Pathfinder::Pathfinder() {}
 
 DR::Pathfinder::Pathfinder(const T& nodes) : nodes(nodes) {}
 
 DR::Pathfinder::~Pathfinder() {}
 
-DR::Pathfinder::Path DR::Pathfinder::find_path(int src, int dest) const noexcept {
+std::stack<int> DR::Pathfinder::find_path(int src, int dest) const noexcept {
     if (src == dest) {
-        return Path(src, dest);
+        return std::stack<int>();
     }
     // visited bit map len
     unsigned int vlen = (nodes.rbegin()->first / 8) + 1;
@@ -76,7 +66,7 @@ DR::Pathfinder::Path DR::Pathfinder::find_path(int src, int dest) const noexcept
     }
 
     if (!found) {
-        return Path(rpath, src, dest);
+        return rpath;
     }
 
     // fill out rpath
@@ -86,5 +76,5 @@ DR::Pathfinder::Path DR::Pathfinder::find_path(int src, int dest) const noexcept
         i = rmap[i];
     }
 
-    return Path(rpath, src, dest);
+    return rpath;
 }

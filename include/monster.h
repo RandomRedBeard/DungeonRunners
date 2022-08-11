@@ -15,14 +15,15 @@
 #include <string>
 
 #include <point.h>
-#include <pathfinder.h>
+#include <pointpath.h>
 #include <serializable.h>
-#include <constants.h>
+#include <util.h>
 
 namespace DR {
     class Monster : public Serializable {
         std::string name;
         Point pt;
+        PointPath path;
         int speed = NORMAL;
         std::chrono::steady_clock::time_point last_moved;
     public:
@@ -30,6 +31,9 @@ namespace DR {
 
         void set_point(Point pt) noexcept { this->pt = pt; }
         Point get_point() const noexcept { return pt; };
+
+        void set_path(PointPath path) { this->path = path; }
+        PointPath get_path() { return path; }
 
         int get_speed() const noexcept { return speed; }
         void set_speed(int speed) { this->speed = speed; }

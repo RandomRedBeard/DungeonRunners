@@ -9,11 +9,20 @@
  * 
  */
 
+#include <map>
+#include <assert.h>
+
 #include <oid.h>
 
 void test_oid() {
-    DR::OID o;
+    DR::OID o = DR::OID::generate();
     o.print();
+
+    DR::OID oid;
+
+    std::map<DR::OID, int> m;
+    m.insert({o, 1});
+    assert(m[o] == 1);
 }
 
 int main() {

@@ -1,5 +1,5 @@
 /**
- * @file oid.h
+ * @file uuid.h
  * @author your name (you@domain.com)
  * @brief
  * @version 0.1
@@ -11,8 +11,6 @@
 #pragma once
 
 #ifdef WIN32
-#pragma comment(lib, "rpcrt4.lib")  // UuidCreate - Minimum supported OS Win 2000
-#include <windows.h>
 #else
 #include <uuid/uuid.h>
 #endif
@@ -25,12 +23,13 @@ namespace DR {
     class OID : public Serializable {
         std::string id;
     public:
-        OID();
-
         json_t* to_json(json_t* o) const noexcept;
         void from_json(const json_t* o);
 
-        bool operator==(const OID& o) const noexcept;
-        bool operator!=(const OID& o) const noexcept;
+        bool operator==(const OID& u) const noexcept;
+        bool operator!=(const OID& u) const noexcept;
+        bool operator<(const OID& u) const noexcept;
+
+        static OID generate();
     };
 }

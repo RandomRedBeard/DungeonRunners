@@ -68,11 +68,16 @@ void test_assignment() {
     assert(pt2.x == 10 && pt2.y == 1);
 }
 
+void test_rand() {
+    DR::Point pt = DR::Point::rand(10, 10);
+}
+
 int main() {
     test_constructors();
     test_distances();
     test_unit_vector();
     test_equals();
     test_assignment();
+    test_rand();
     return 0;
 }

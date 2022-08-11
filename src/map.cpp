@@ -13,7 +13,7 @@
 
 DR::Map::Map() {}
 
-DR::Map::Map(unsigned int width, unsigned int height, unsigned int rcols, unsigned int rrows) : width(width), height(height), rcols(rcols), rrows(rrows) {
+DR::Map::Map(OID id, unsigned int width, unsigned int height, unsigned int rcols, unsigned int rrows) : id(id), width(width), height(height), rcols(rcols), rrows(rrows) {
     build_map();
     connect_rooms();
     build_layout_bitmap();
@@ -340,23 +340,6 @@ void DR::Map::from_json(const json_t* o) {
     }
 }
 
-DR::Point DR::Map::MapPath::pop() {
-    int i = path.pop();
-    if (i == -1) {
-        return Point();
-    }
-
-    return Point::index(i, width);
-}
-
-DR::Point DR::Map::MapPath::get_src() const noexcept {
-    return Point::index(path.get_src(), width);
-}
-
-DR::Point DR::Map::MapPath::get_dest() const noexcept {
-    return Point::index(path.get_dest(), width);
-}
-
-DR::Map::MapPath DR::Map::find_path(Point src, Point dest) {
-    return Map::MapPath(pathfinder.find_path(src.index(width), dest.index(width)), width);
+DR::PointPath DR::Map::find_path(Point src, Point dest) {
+    return PointPath(pathfinder.find_path(src.index(width), dest.index(width)), src, dest, width);
 }
