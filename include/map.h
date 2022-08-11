@@ -39,11 +39,18 @@ namespace DR {
 
         // Valid move checking
         std::unique_ptr<char[]> layout_bitmap;
+        // Valid move checking 2.0 - Provide to others 
+        std::vector<int> cells;
 
         // Pathfinder
         Pathfinder pathfinder;
 
+        /**
+         * @brief Builds layout_bitmap and cells
+         *
+         */
         void build_layout_bitmap();
+
         void build_pathfinder();
         Hallway build_hallway(Point pt1, Point pt2);
         void connect_rooms();
@@ -56,6 +63,7 @@ namespace DR {
         const static char ENTR = '+';
 
         Map();
+        Map(Map&& m) = default;
         Map(OID id, unsigned int width, unsigned int height, unsigned int rcols, unsigned int rrows);
         virtual ~Map();
 
@@ -76,6 +84,8 @@ namespace DR {
         bool is_walkable(Point pt) const noexcept;
 
         char get_point(Point pt) const noexcept;
+
+        const std::vector<int> get_cells() const noexcept { return cells; }
 
         /**
          * @brief Utility method for placing on map

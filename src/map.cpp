@@ -33,7 +33,9 @@ void DR::Map::build_layout_bitmap() {
         Room r = p.second;
         for (int i = 1; i < r.w - 1; i++) {
             for (int j = 1; j < r.h - 1; j++) {
-                *(bm + Point::index(i + r.x, j + r.y, width)) = FLOOR;
+                int pt = Point::index(i + r.x, j + r.y, width);
+                *(bm + pt) = FLOOR;
+                cells.push_back(pt);
             }
         }
 
@@ -49,25 +51,35 @@ void DR::Map::build_layout_bitmap() {
         }
 
         if (r.getEa().x > 0) {
-            *(bm + r.getEa().index(width)) = ENTR;
+            int pt = r.getEa().index(width);
+            *(bm + pt) = ENTR;
+            cells.push_back(pt);
         }
 
         if (r.getSo().x > 0) {
-            *(bm + r.getSo().index(width)) = ENTR;
+            int pt = r.getSo().index(width);
+            *(bm + pt) = ENTR;
+            cells.push_back(pt);
         }
 
         if (r.getWe().x > 0) {
-            *(bm + r.getWe().index(width)) = ENTR;
+            int pt = r.getWe().index(width);
+            *(bm + pt) = ENTR;
+            cells.push_back(pt);
         }
 
         if (r.getNo().x > 0) {
-            *(bm + r.getNo().index(width)) = ENTR;
+            int pt = r.getNo().index(width);
+            *(bm + pt) = ENTR;
+            cells.push_back(pt);
         }
     }
 
     for (Hallway h : halls) {
         for (Point p : h.get_points()) {
-            *(bm + p.index(width)) = HALL;
+            int pt = p.index(width);
+            *(bm + pt) = HALL;
+            cells.push_back(pt);
         }
     }
 }

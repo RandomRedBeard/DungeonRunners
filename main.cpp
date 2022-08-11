@@ -59,6 +59,7 @@ int main(int argc, char** argv) {
     p.set_point(pt);
 
     vector<Monster> monsters;
+    vector<Monster&> refs;
     // vector<thread> mts;
     mutex mu;
 
@@ -71,6 +72,7 @@ int main(int argc, char** argv) {
         mo.set_speed(500 * (1 + rand() % 3));
 
         monsters.push_back(mo);
+        refs.push_back(*(monsters.end() - 1));
     }
 
     thread mt(monster_thread, &c, &m, &p, &monsters, &mu);
