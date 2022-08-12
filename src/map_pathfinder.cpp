@@ -12,6 +12,7 @@
 #include "map_pathfinder.h"
 
 DR::MapPathfinder::MapPathfinder(const Map* m) {
+    auto rng = std::default_random_engine {};
     width = m->get_width();
     unsigned int height = m->get_height();
     // Build pathfinder map
@@ -43,6 +44,8 @@ DR::MapPathfinder::MapPathfinder(const Map* m) {
         }
 
         if (!neighbors.empty()) {
+            // A little bit of spice
+            std::shuffle(std::begin(neighbors), std::end(neighbors), rng);
             nodes[i] = neighbors;
         }
     }

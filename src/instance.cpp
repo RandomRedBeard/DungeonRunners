@@ -13,6 +13,9 @@
 
 DR::Instance::Instance(DR::Map&& pmap) : pmap(std::move(pmap)) {}
 
+DR::Instance::~Instance() {
+}
+
 DR::Point DR::Instance::rand_point() const noexcept {
     Point pt;
     do {
@@ -22,7 +25,9 @@ DR::Point DR::Instance::rand_point() const noexcept {
 }
 
 void DR::Instance::add_player(std::weak_ptr<Player> p, Point pt) {
-    unique_cell.insert({ pt.index(pmap.get_width()), p });
+    auto l = p.lock();
+    players.insert({l->get_id(), p});
+    unique_cells.insert({ pt.index(pmap.get_width()), p });
 }
 
 void DR::Instance::generate_monsters(int n) {
@@ -35,7 +40,7 @@ void DR::Instance::generate_monsters(int n) {
 
         // Add to containers
         monsters.insert({ m->get_id(), m });
-        unique_cell.insert({ pt.index(pmap.get_width()), m });
+        unique_cells.insert({ pt.index(pmap.get_width()), m });
     }
 }
 
@@ -44,13 +49,13 @@ bool DR::Instance::move(std::weak_ptr<HasId> o, Point src, Point dest) {
         return false;
     }
 
-    unique_cell.erase(src.index(pmap.get_width()));
-    unique_cell.insert({ dest.index(pmap.get_width()), o });
+    unique_cells.erase(src.index(pmap.get_width()));
+    unique_cells.insert({ dest.index(pmap.get_width()), o });
     return true;
 }
 
 bool DR::Instance::is_walkable(int index) const noexcept {
-    return pmap.is_walkable(index) && unique_cell.find(index) == unique_cell.end();
+    return pmap.is_walkable(index) && unique_cells.find(index) == unique_cells.end();
 }
 
 bool DR::Instance::is_walkable(Point pt) const noexcept {

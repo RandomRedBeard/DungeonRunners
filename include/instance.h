@@ -35,7 +35,9 @@ namespace DR {
 
         // Map for unique cell placement
         // Weak pointer for non-owning
-        std::map<int, std::weak_ptr<HasId>> unique_cell;
+        std::map<int, std::weak_ptr<HasId>> unique_cells;
+
+        std::map<int, std::weak_ptr<HasId>> shared_cells;
 
         /**
          * @brief pmap.rand_point + unique_cell consideration
@@ -46,6 +48,7 @@ namespace DR {
     public:
         // Take ownership of map
         Instance(Map&& pmap);
+        virtual ~Instance();
 
         void add_player(std::weak_ptr<Player> p, Point pt);
 

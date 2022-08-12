@@ -11,6 +11,9 @@
 
 #pragma once
 
+#include <algorithm>
+#include <random>
+
 #include <map.h>
 #include <pathfinder.h>
 #include <pointpath.h>
