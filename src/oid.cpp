@@ -11,12 +11,10 @@
 
 #include "oid.h"
 
-#include <iostream>
-
 DR::OID DR::OID::generate() {
     OID id;
 #ifdef WIN32
-    OID uuid;
+    UUID uuid;
     UuidCreate(&uuid);
     char* str;
     UuidToStringA(&uuid, (RPC_CSTR*)&str);
