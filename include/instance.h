@@ -36,8 +36,6 @@ namespace DR {
         // Take ownership of map
         Instance(Map&& pmap);
 
-        void add_player(OID id, Player* player) { players.insert({ id, player }); };
-
         void generate_monsters(int n);
     };
 }

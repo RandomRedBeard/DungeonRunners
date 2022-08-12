@@ -16,70 +16,53 @@ DR::Map::Map() {}
 DR::Map::Map(OID id, unsigned int width, unsigned int height, unsigned int rcols, unsigned int rrows) : id(id), width(width), height(height), rcols(rcols), rrows(rrows) {
     build_map();
     connect_rooms();
-    build_layout_bitmap();
+    build_meta();
     build_pathfinder();
 }
 
 DR::Map::~Map() {
 }
 
-void DR::Map::build_layout_bitmap() {
+void DR::Map::build_meta() {
     unsigned int len = width * height;
-    layout_bitmap = std::make_unique<char[]>(len);
-    char* bm = layout_bitmap.get();
-    memset(bm, ' ', len);
 
     for (std::pair<int, Room> p : rooms) {
         Room r = p.second;
         for (int i = 1; i < r.w - 1; i++) {
             for (int j = 1; j < r.h - 1; j++) {
                 int pt = Point::index(i + r.x, j + r.y, width);
-                *(bm + pt) = FLOOR;
-                cells.push_back(pt);
+                meta.insert({ pt, MapMeta(r) });
             }
-        }
-
-        // Ceilings are one above
-        for (int i = 1; i < r.h - 1; i++) {
-            *(bm + Point::index(r.x, i + r.y, width)) = VWALL;
-            *(bm + Point::index(r.x + r.w - 1, i + r.y, width)) = VWALL;
-        }
-
-        for (int i = 0; i < r.w; i++) {
-            *(bm + Point::index(r.x + i, r.y, width)) = HWALL;
-            *(bm + Point::index(r.x + i, r.y + r.h - 1, width)) = HWALL;
         }
 
         if (r.getEa().x > 0) {
             int pt = r.getEa().index(width);
-            *(bm + pt) = ENTR;
-            cells.push_back(pt);
+            meta.insert({ pt, MapMeta(r, ENTR) });
         }
 
         if (r.getSo().x > 0) {
-            int pt = r.getSo().index(width);
-            *(bm + pt) = ENTR;
-            cells.push_back(pt);
+            int pt = r.getSo().index(width);         
+			meta.insert({ pt, MapMeta(r, ENTR) });
+
         }
 
         if (r.getWe().x > 0) {
-            int pt = r.getWe().index(width);
-            *(bm + pt) = ENTR;
-            cells.push_back(pt);
+            int pt = r.getWe().index(width);      
+            meta.insert({ pt, MapMeta(r, ENTR) });
+
         }
 
         if (r.getNo().x > 0) {
-            int pt = r.getNo().index(width);
-            *(bm + pt) = ENTR;
-            cells.push_back(pt);
+            int pt = r.getNo().index(width);    
+            meta.insert({ pt, MapMeta(r, ENTR) });
+
         }
     }
 
     for (Hallway h : halls) {
         for (Point p : h.get_points()) {
             int pt = p.index(width);
-            *(bm + pt) = HALL;
-            cells.push_back(pt);
+            meta.insert({ pt, MapMeta(h) });
         }
     }
 }
@@ -264,8 +247,8 @@ void DR::Map::build_map() {
 
 
 bool DR::Map::is_walkable(int index) const noexcept {
-    // Very safe
-    return strchr(".#+", *(layout_bitmap.get() + index));
+    auto iter = meta.find(index);
+    return iter != meta.end();
 }
 
 
@@ -274,7 +257,8 @@ bool DR::Map::is_walkable(Point pt) const noexcept {
 }
 
 char DR::Map::get_point(Point pt) const noexcept {
-    return *(layout_bitmap.get() + pt.index(width));
+    auto iter = meta.find(pt.index(width));
+	return iter == meta.end() ? ' ' : iter->second.type;
 }
 
 DR::Point DR::Map::rand_point() const noexcept {

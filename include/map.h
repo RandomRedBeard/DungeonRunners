@@ -26,6 +26,28 @@
 
 namespace DR {
 
+    const static char FLOOR = '.';
+    const static char HALL = '#';
+    const static char VWALL = '|';
+    const static char HWALL = '-';
+	const static char ENTR = '+';
+
+    struct MapMeta {
+		const Room room;
+        const Hallway hall;
+        char type;
+
+        MapMeta(const Room room) : room(room) {
+            type = FLOOR;
+        }
+
+        MapMeta(const Room room, char type) : room(room), type(type) {}
+
+        MapMeta(const Hallway hall) : hall(hall) {
+            type = HALL;
+        }
+    };
+
     class Map : public Serializable {
         OID id;
         // Phys-map attrs
@@ -37,30 +59,27 @@ namespace DR {
         std::map<int, Room> rooms;
         std::vector<Hallway> halls;
 
+        std::map<int, MapMeta> meta;
+
         // Valid move checking
-        std::unique_ptr<char[]> layout_bitmap;
+        //std::unique_ptr<char[]> layout_bitmap;
         // Valid move checking 2.0 - Provide to others 
-        std::vector<int> cells;
+        //std::vector<int> cells;
 
         // Pathfinder
         Pathfinder pathfinder;
 
         /**
-         * @brief Builds layout_bitmap and cells
+         * @brief Build layout
          *
          */
-        void build_layout_bitmap();
+        void build_meta();
 
         void build_pathfinder();
         Hallway build_hallway(Point pt1, Point pt2);
         void connect_rooms();
         void build_map();
     public:
-        const static char FLOOR = '.';
-        const static char HALL = '#';
-        const static char VWALL = '|';
-        const static char HWALL = '-';
-        const static char ENTR = '+';
 
         Map();
         Map(Map&& m) = default;
@@ -84,8 +103,6 @@ namespace DR {
         bool is_walkable(Point pt) const noexcept;
 
         char get_point(Point pt) const noexcept;
-
-        const std::vector<int> get_cells() const noexcept { return cells; }
 
         /**
          * @brief Utility method for placing on map
