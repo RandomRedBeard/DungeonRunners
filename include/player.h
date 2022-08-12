@@ -13,15 +13,20 @@
 
 #include <string>
 
+#include <hasid.h>
+#include <oid.h>
 #include <serializable.h>
 #include <point.h>
 
 namespace DR {
-    class Player : public Serializable {
+    class Player : public Serializable, public HasId {
+        OID id;
         Point pt;
         std::string name;
     public:
-        Player();
+        Player(OID id);
+
+        const OID get_id() const noexcept { return id; }
 
         void set_name(std::string name) noexcept { this->name = name; }
         std::string get_name() const noexcept { return name; }

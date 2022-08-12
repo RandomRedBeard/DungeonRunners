@@ -18,16 +18,20 @@
 #include <pointpath.h>
 #include <serializable.h>
 #include <util.h>
+#include <hasid.h>
 
 namespace DR {
-    class Monster : public Serializable {
+    class Monster : public Serializable, public HasId {
+        OID id;
         std::string name;
         Point pt;
         PointPath path;
         int speed = NORMAL;
         std::chrono::steady_clock::time_point last_moved;
     public:
-        Monster(std::string name);
+        Monster(OID id, std::string name);
+
+        const OID get_id() const noexcept { return id; }
 
         void set_point(Point pt) noexcept { this->pt = pt; }
         Point get_point() const noexcept { return pt; };

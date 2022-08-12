@@ -14,6 +14,7 @@
 #include <map>
 #include <vector>
 
+#include <hasid.h>
 #include <monster.h>
 #include <player.h>
 #include <map.h>
@@ -25,17 +26,44 @@ namespace DR {
      *
      */
     class Instance {
+    public:
         // DMLayer will not own players
-        std::map<OID, Player*> players;
+        std::map<OID, std::weak_ptr<Player>> players;
         // This will own the monsters and map
-        std::map<OID, Monster> monsters;
+        std::map<OID, std::shared_ptr<Monster>> monsters;
         Map pmap;
 
-        // Map for cell lookup
+        // Map for unique cell placement
+        // Weak pointer for non-owning
+        std::map<int, std::weak_ptr<HasId>> unique_cell;
+
+        /**
+         * @brief pmap.rand_point + unique_cell consideration
+         *
+         * @return Point
+         */
+        Point rand_point() const noexcept;
     public:
         // Take ownership of map
         Instance(Map&& pmap);
 
+        void add_player(std::weak_ptr<Player> p, Point pt);
+
         void generate_monsters(int n);
+
+        /**
+         * @brief Updates unique_cell map if move can be completed
+         * without conflict (i.e is_walkable check)
+         *
+         * @param o
+         * @param src
+         * @param dest
+         * @return true
+         * @return false
+         */
+        bool move(std::weak_ptr<HasId> o, Point src, Point dest);
+
+        bool is_walkable(int index) const noexcept;
+        bool is_walkable(Point pt) const noexcept;
     };
 }

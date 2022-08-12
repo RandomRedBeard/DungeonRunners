@@ -4,6 +4,7 @@
 #include <chrono>
 #include <mutex>
 
+#include <instance.h>
 #include <map.h>
 #include <pathfinder.h>
 #include <c_graphics.h>
@@ -15,32 +16,40 @@ bool END = false;
 using namespace std;
 using namespace DR;
 
-void monster_thread(CGraphics* g, Map* m, Player* p, std::vector<Monster>* monsters, mutex* mu) {
+void monster_thread(CGraphics* g, Instance* inst, shared_ptr<Player> p, mutex* mu) {
     int i = 0;
     while (!END) {
         this_thread::sleep_for(chrono::milliseconds(500));
         auto now = chrono::steady_clock::now();
-        for (Monster& me : *monsters) {
-            auto i_millis = std::chrono::duration_cast<std::chrono::milliseconds>(now - me.get_last_moved());
-            if (i_millis.count() <= me.get_speed()) {
+        for (pair<const OID, shared_ptr<Monster>>& pa : inst->monsters) {
+            shared_ptr<Monster> me = pa.second;
+            auto i_millis = std::chrono::duration_cast<std::chrono::milliseconds>(now - me->get_last_moved());
+            if (i_millis.count() <= me->get_speed()) {
+                g->put("map", me->get_point(), 'M');
                 continue;
             }
 
-            mvprintw(50 + (i % 5), 0, "%d - %d   ", i_millis.count(), me.get_speed());
+            mvprintw(50 + (i % 5), 0, "%d - %d   ", i_millis.count(), me->get_speed());
             refresh();
             i++;
-            me.set_last_moved(now);
-            PointPath path = m->find_path(me.get_point(), p->get_point());
+            me->set_last_moved(now);
+            PointPath path = inst->pmap.find_path(me->get_point(), p->get_point());
 
             if (path.empty()) {
                 continue;
             }
 
+            Point dest = path.top();
+            if (!inst->is_walkable(dest)) {
+                continue;
+            }
+            path.pop();
+
             lock_guard<mutex> lock(*mu);
-            Point dest = path.pop();
-            g->put("map", me.get_point(), m->get_point(me.get_point()));
-            me.set_point(dest);
-            g->put("map", me.get_point(), 'M');
+            inst->move(me, me->get_point(), dest);
+            g->put("map", me->get_point(), inst->pmap.get_point(me->get_point()));
+            me->set_point(dest);
+            g->put("map", me->get_point(), 'M');
         }
     }
 }
@@ -49,33 +58,27 @@ int main(int argc, char** argv) {
     srand(time(0));
 
     Map m(OID::generate(), 150, 40, 7, 5);
+    int width = m.get_width();
+    int height = m.get_height();
+
+    Instance inst(move(m));
+
+    inst.generate_monsters(10);
 
     CGraphics c;
-    c.addwin("map", { 0, 0, (int)m.get_width(), (int)m.get_height() });
-    c.put_map("map", m, CGraphicsRoomConfig(), '#');
+    c.addwin("map", { 0, 0, width, height });
+    c.put_map("map", inst.pmap, CGraphicsRoomConfig(), '#');
 
-    Player p;
-    Point pt = m.rand_point();
-    p.set_point(pt);
+    shared_ptr<Player> p = make_shared<Player>(OID::generate());
+    Point pt = inst.rand_point();
+    p->set_point(pt);
+    inst.add_player(p, pt);
 
-    vector<Monster> monsters;
-    // vector<thread> mts;
     mutex mu;
 
+    thread mt(monster_thread, &c, &inst, p, &mu);
 
-    for (int i = 0; i < 10; i++) {
-        Monster mo("Ice Monster");
-        pt = m.rand_point();
-        mo.set_point(pt);
-        mo.set_last_moved(chrono::steady_clock::now());
-        mo.set_speed(500 * (1 + rand() % 3));
-
-        monsters.push_back(mo);
-    }
-
-    thread mt(monster_thread, &c, &m, &p, &monsters, &mu);
-
-    c.put("map", p.get_point(), '@');
+    c.put("map", p->get_point(), '@');
 
     MEVENT e;
     int i;
@@ -100,14 +103,14 @@ int main(int argc, char** argv) {
             continue;
         }
 
-        Point dest = p.get_point().move(d);
-        if (!m.is_walkable(dest)) {
+        Point dest = p->get_point().move(d);
+        if (!inst.move(p, p->get_point(), dest)) {
             continue;
         }
         lock_guard<mutex> lock(mu);
-        c.put("map", p.get_point(), m.get_point(p.get_point()));
-        p.set_point(dest);
-        c.put("map", p.get_point(), '@');
+        c.put("map", p->get_point(), inst.pmap.get_point(p->get_point()));
+        p->set_point(dest);
+        c.put("map", p->get_point(), '@');
     }
 
     END = true;

@@ -30,10 +30,10 @@ namespace DR {
     const static char HALL = '#';
     const static char VWALL = '|';
     const static char HWALL = '-';
-	const static char ENTR = '+';
+    const static char ENTR = '+';
 
     struct MapMeta {
-		const Room room;
+        const Room room;
         const Hallway hall;
         char type;
 
@@ -88,15 +88,16 @@ namespace DR {
 
         const OID get_id() { return id; }
 
-        unsigned int get_height() { return height; }
-        unsigned int get_width() { return width; }
+        unsigned int get_height() const noexcept { return height; }
+        unsigned int get_width() const noexcept { return width; }
 
-        unsigned int get_rrows() { return rrows; }
-        unsigned int get_rcols() { return rcols; }
+        unsigned int get_rrows() const noexcept { return rrows; }
+        unsigned int get_rcols() const noexcept { return rcols; }
 
         const std::map<int, Room>& get_rooms() const noexcept { return rooms; }
         std::map<int, Room>::const_iterator find_room(int index) { return rooms.find(index); }
         const std::vector<Hallway>& get_halls() const noexcept { return halls; }
+        const std::map<int, MapMeta> get_meta() const noexcept { return meta; }
         const Pathfinder& get_pathfinder() const noexcept { return pathfinder; }
 
         bool is_walkable(int index) const noexcept;

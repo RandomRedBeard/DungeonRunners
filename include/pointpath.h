@@ -23,7 +23,8 @@ namespace DR {
         PointPath();
         PointPath(std::stack<int> path, Point src, Point dest, int width);
 
-        Point pop();
+        Point top();
+        void pop();
         bool empty() const noexcept { return path.empty(); }
 
         Point get_src() const noexcept { return src; }

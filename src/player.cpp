@@ -10,7 +10,7 @@
  */
 #include "player.h"
 
-DR::Player::Player() {}
+DR::Player::Player(OID id) : id(id) {}
 
 json_t* DR::Player::to_json(json_t* o) const noexcept {
     json_object_set_new(o, "name", json_string(name.c_str()));
