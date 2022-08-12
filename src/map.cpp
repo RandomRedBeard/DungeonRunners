@@ -17,7 +17,6 @@ DR::Map::Map(OID id, unsigned int width, unsigned int height, unsigned int rcols
     build_map();
     connect_rooms();
     build_layout_bitmap();
-    build_pathfinder();
 }
 
 DR::Map::~Map() {
@@ -82,43 +81,6 @@ void DR::Map::build_layout_bitmap() {
             cells.push_back(pt);
         }
     }
-}
-
-void DR::Map::build_pathfinder() {
-    // Build pathfinder map
-    unsigned int len = width * height;
-    std::map<int, std::vector<int>> nodes;
-
-    for (unsigned int i = 0; i < len; i++) {
-        if (!is_walkable(i)) {
-            continue;;
-        }
-
-        std::vector<int> neighbors;
-
-        // Up
-        if (i - width >= 0 && is_walkable(i - width)) {
-            neighbors.push_back(i - width);
-        }
-
-        if (i + width < len && is_walkable(i + width)) {
-            neighbors.push_back(i + width);
-        }
-
-        if (i % width != 0 && is_walkable(i - 1)) {
-            neighbors.push_back(i - 1);
-        }
-
-        if (i % width != width - 1 && is_walkable(i + 1)) {
-            neighbors.push_back(i + 1);
-        }
-
-        if (!neighbors.empty()) {
-            nodes[i] = neighbors;
-        }
-    }
-
-    pathfinder = Pathfinder(nodes);
 }
 
 DR::Hallway DR::Map::build_hallway(Point pt1, Point pt2) {
@@ -350,8 +312,4 @@ void DR::Map::from_json(const json_t* o) {
     if (json_rrows) {
         rrows = json_integer_value(json_rrows);
     }
-}
-
-DR::PointPath DR::Map::find_path(Point src, Point dest) {
-    return PointPath(pathfinder.find_path(src.index(width), dest.index(width)), src, dest, width);
 }

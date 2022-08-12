@@ -16,7 +16,7 @@ using namespace DR;
 
 void test_monster() {
     srand(time(0));
-    Monster mo("Ice Monster");
+    Monster mo(OID::generate(), "Ice Monster");
     mo.set_last_moved(chrono::steady_clock::now());
     mo.set_speed(500 * (1 + rand() % 3));
 

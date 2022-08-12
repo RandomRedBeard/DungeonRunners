@@ -40,18 +40,14 @@ namespace DR {
         // Valid move checking
         std::unique_ptr<char[]> layout_bitmap;
         // Valid move checking 2.0 - Provide to others 
-        std::vector<int> cells;
-
-        // Pathfinder
-        Pathfinder pathfinder;
+        // Add metadata
+        //std::vector<int> cells;
 
         /**
          * @brief Builds layout_bitmap and cells
          *
          */
         void build_layout_bitmap();
-
-        void build_pathfinder();
         Hallway build_hallway(Point pt1, Point pt2);
         void connect_rooms();
         void build_map();
@@ -78,7 +74,6 @@ namespace DR {
         const std::map<int, Room>& get_rooms() const noexcept { return rooms; }
         std::map<int, Room>::const_iterator find_room(int index) { return rooms.find(index); }
         const std::vector<Hallway>& get_halls() const noexcept { return halls; }
-        const Pathfinder& get_pathfinder() const noexcept { return pathfinder; }
 
         bool is_walkable(int index) const noexcept;
         bool is_walkable(Point pt) const noexcept;
@@ -96,7 +91,5 @@ namespace DR {
 
         json_t* to_json(json_t* o) const noexcept;
         void from_json(const json_t* o);
-
-        PointPath find_path(Point src, Point dest);
     };
 } // namespace DR

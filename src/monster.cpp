@@ -11,7 +11,7 @@
 
 #include "monster.h"
 
-DR::Monster::Monster(std::string name) : name(name) {}
+DR::Monster::Monster(OID id, std::string name) : id(id), name(name) {}
 
 json_t* DR::Monster::to_json(json_t* o) const noexcept {
     json_object_set_new(o, "name", json_string(name.c_str()));

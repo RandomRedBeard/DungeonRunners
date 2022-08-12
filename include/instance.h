@@ -14,9 +14,11 @@
 #include <map>
 #include <vector>
 
+#include <hasid.h>
 #include <monster.h>
 #include <player.h>
 #include <map.h>
+#include <pathfinder.h>
 #include <oid.h>
 
 namespace DR {
@@ -25,18 +27,22 @@ namespace DR {
      *
      */
     class Instance {
+    public:
         // DMLayer will not own players
         std::map<OID, Player*> players;
         // This will own the monsters and map
-        std::map<OID, Monster> monsters;
+        std::map<OID, std::shared_ptr<Monster>> monsters;
         Map pmap;
 
         // Map for cell lookup
+        std::map<int, std::weak_ptr<HasId>> cells;
+        Point rand_point();
     public:
         // Take ownership of map
         Instance(Map&& pmap);
 
-        void add_player(OID id, Player* player) { players.insert({ id, player }); };
+        bool is_walkable(int index);
+        bool is_walkable(Point pt);
 
         void generate_monsters(int n);
     };
