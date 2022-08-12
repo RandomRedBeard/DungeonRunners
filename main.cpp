@@ -4,6 +4,7 @@
 #include <chrono>
 #include <mutex>
 
+#include <map_pathfinder.h>
 #include <instance.h>
 #include <map.h>
 #include <pathfinder.h>
@@ -18,6 +19,7 @@ using namespace DR;
 
 void monster_thread(CGraphics* g, Instance* inst, shared_ptr<Player> p, mutex* mu) {
     int i = 0;
+    MapPathfinder pf(&inst->pmap);
     while (!END) {
         this_thread::sleep_for(chrono::milliseconds(500));
         auto now = chrono::steady_clock::now();
@@ -33,7 +35,7 @@ void monster_thread(CGraphics* g, Instance* inst, shared_ptr<Player> p, mutex* m
             refresh();
             i++;
             me->set_last_moved(now);
-            PointPath path = inst->pmap.find_path(me->get_point(), p->get_point());
+            PointPath path = pf.find_path(me->get_point(), p->get_point());
 
             if (path.empty()) {
                 continue;
