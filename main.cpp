@@ -42,14 +42,13 @@ void monster_thread(CGraphics* g, Instance* inst, shared_ptr<Player> p, mutex* m
             }
 
             Point dest = path.top();
-            
+
             lock_guard<mutex> lock(*mu);
-            if (!inst->is_walkable(dest)) {
+            if (!inst->move(me, me->get_point(), dest)) {
                 continue;
             }
             path.pop();
 
-            inst->move(me, me->get_point(), dest);
             g->put("map", me->get_point(), inst->pmap.get_point(me->get_point()));
             me->set_point(dest);
             g->put("map", me->get_point(), 'M');

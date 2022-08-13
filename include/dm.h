@@ -26,6 +26,6 @@ namespace DR {
      */
     class DM {
         // Owning players
-        std::vector<Player> players;
+        std::vector<std::shared_ptr<Player>> players;
     };
 }
