@@ -55,13 +55,13 @@ endif()
 file(GLOB DR_SOURCE src/*.cpp)
 
 # Static linkage to avoid DLL hell
-add_library(dr_lib STATIC ${DR_SOURCE})
+add_library(DR STATIC ${DR_SOURCE})
 if (MSVC)
-    target_compile_definitions(dr_lib PRIVATE -DPDC_DLL_BUILD)
+    target_compile_definitions(DR PRIVATE -DPDC_DLL_BUILD)
 endif()
-target_link_libraries(dr_lib ${DR_LINKS})
+target_link_libraries(DR ${DR_LINKS})
 
-set(DR_LINKS ${DR_LINKS} dr_lib)
+set(DR_LINKS ${DR_LINKS} DR)
 
 # Run all tests in tests directory
 file(GLOB files tests/*)
