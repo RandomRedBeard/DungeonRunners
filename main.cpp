@@ -4,6 +4,7 @@
 #include <chrono>
 #include <mutex>
 
+#include <arg.h>
 #include <map_pathfinder.h>
 #include <instance.h>
 #include <map.h>
@@ -31,7 +32,7 @@ void monster_thread(CGraphics* g, Instance* inst, shared_ptr<Player> p, mutex* m
                 continue;
             }
 
-            mvprintw(50 + (i % 5), 0, "%d - %d   ", i_millis.count(), me->get_speed());
+            mvprintw(inst->pmap.get_height() + (i % 10), 0, "%s - %d - %d   ", me->get_id().get().c_str(), i_millis.count(), me->get_speed());
             refresh();
             i++;
             me->set_last_moved(now);
@@ -59,13 +60,22 @@ void monster_thread(CGraphics* g, Instance* inst, shared_ptr<Player> p, mutex* m
 int main(int argc, char** argv) {
     srand(time(0));
 
-    Map m(OID::generate(), 150, 40, 7, 5);
+    ArgParser parser;
+    parser.add_long("w", 150);
+    parser.add_long("h", 40);
+    parser.add_long("cc", 3);
+    parser.add_long("rc", 3);
+    parser.add_long("mc", 10);
+
+    parser.parse(argc, argv);
+
+    Map m(OID::generate(), parser.get_long("w"), parser.get_long("h"), parser.get_long("cc"), parser.get_long("rc"));
     int width = m.get_width();
     int height = m.get_height();
 
     Instance inst(move(m));
 
-    inst.generate_monsters(10);
+    inst.generate_monsters(parser.get_long("mc"));
 
     CGraphics c;
     c.addwin("map", { 0, 0, width, height });

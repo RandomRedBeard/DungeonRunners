@@ -24,6 +24,8 @@ namespace DR {
     class OID : public Serializable {
         std::string id;
     public:
+        const std::string get() const noexcept { return id; }
+
         json_t* to_json(json_t* o) const noexcept;
         void from_json(const json_t* o);
 

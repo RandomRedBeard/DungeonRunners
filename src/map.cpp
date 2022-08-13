@@ -207,7 +207,6 @@ void DR::Map::build_map() {
     }
 }
 
-
 bool DR::Map::is_walkable(int index) const noexcept {
     auto iter = meta.find(index);
     return iter != meta.end();
