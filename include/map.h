@@ -48,7 +48,7 @@ namespace DR {
         }
     };
 
-    class Map : public Serializable {
+    class Map {
         OID id;
         // Phys-map attrs
         unsigned int width, height;
@@ -111,9 +111,6 @@ namespace DR {
          * @return Point
          */
         Point rand_point() const noexcept;
-
-        json_t* to_json(json_t* o) const noexcept;
-        void from_json(const json_t* o);
 
         PointPath find_path(Point src, Point dest);
     };

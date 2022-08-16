@@ -10,37 +10,26 @@
  */
 #pragma once
 
-#include <jansson.h>
+#include <iostream>
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/json_parser.hpp>
+
 
 namespace DR {
-    struct Serializable {
-        virtual json_t* to_json(json_t*) const noexcept = 0;
-        inline json_t* new_json() const noexcept {
-            json_t* root = json_object();
-            return to_json(root);
-        }
-        virtual void from_json(const json_t*) = 0;
 
-        /**
-         * @brief Generic builder for basic types
-         * 
-         * @tparam T 
-         * @param o 
-         * @return T 
-         */
-        template<typename T>
-        static T from_json(const json_t* o) {
-            T t;
-            t.from_json(o);
-            return t;
+    typedef boost::property_tree::ptree Serial;
+
+    struct Serializable {
+        virtual Serial serialize(Serial o) const noexcept = 0;
+        inline Serial serialize() const noexcept {
+            Serial o;
+            return serialize(o);
         }
+        virtual void deserialize(const Serial o) = 0;
 
         void print() const noexcept {
-            json_t* o = new_json();
-            char* buf = json_dumps(o, JSON_INDENT(4));
-            puts(buf);
-            free(buf);
-            json_decref(o);
+            auto o = serialize();
+            boost::property_tree::write_json(std::cout, o);
         }
 
     };

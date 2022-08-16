@@ -53,23 +53,15 @@ DR::Point DR::Point::move(Direction d) const noexcept {
     return {x, y};
 }
 
-json_t* DR::Point::to_json(json_t* root) const noexcept {
-    json_object_set_new(root, "x", json_integer(x));
-    json_object_set_new(root, "y", json_integer(y));
+DR::Serial DR::Point::serialize(Serial root) const noexcept {
+    root.put("x", x);
+    root.put("y", y);
     return root;
 }
 
-void DR::Point::from_json(const json_t* o) {
-    json_t* json_x = json_object_get(o, "x");
-    json_t* json_y = json_object_get(o, "y");
-
-    if (json_x) {
-        x = json_integer_value(json_x);
-    }
-
-    if (json_y) {
-        y = json_integer_value(json_y);
-    }
+void DR::Point::deserialize(const Serial o) {
+    x = o.get<int>("x", 0);
+    y = o.get<int>("y", 0);
 }
 
 bool DR::Point::operator==(const Point& pt) const noexcept {

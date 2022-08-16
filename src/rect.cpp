@@ -22,35 +22,19 @@ unsigned int DR::Rect::area() const noexcept {
     return h * w;
 }
 
-json_t* DR::Rect::to_json(json_t* o) const noexcept {
-    json_object_set_new(o, "x", json_integer(x));
-    json_object_set_new(o, "y", json_integer(y));
-    json_object_set_new(o, "w", json_integer(w));
-    json_object_set_new(o, "h", json_integer(h));
+DR::Serial DR::Rect::serialize(Serial o) const noexcept {
+    o.put("x", x);
+    o.put("y", y);
+    o.put("w", w);
+    o.put("h", h);
     return o;
 }
 
-void DR::Rect::from_json(const json_t* o) {
-    json_t* json_x = json_object_get(o, "x");
-    json_t* json_y = json_object_get(o, "y");
-    json_t* json_w = json_object_get(o, "w");
-    json_t* json_h = json_object_get(o, "h");
-
-    if (json_x) {
-        x = json_integer_value(json_x);
-    }
-
-    if (json_y) {
-        y = json_integer_value(json_y);
-    }
-
-    if (json_w) {
-        w = json_integer_value(json_w);
-    }
-
-    if (json_h) {
-        h = json_integer_value(json_h);
-    }
+void DR::Rect::deserialize(const Serial o) {
+    x = o.get<int>("x", 0);
+    y = o.get<int>("y", 0);
+    w = o.get<int>("w", 0);
+    h = o.get<int>("h", 0);
 }
 
 bool DR::Rect::operator==(const Rect& r) const noexcept {

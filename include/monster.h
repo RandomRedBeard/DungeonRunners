@@ -21,7 +21,7 @@
 #include <hasid.h>
 
 namespace DR {
-    class Monster : public Serializable, public HasId {
+    class Monster : public HasId {
         OID id;
         std::string name;
         Point pt;
@@ -44,8 +44,5 @@ namespace DR {
 
         const std::chrono::steady_clock::time_point get_last_moved() const noexcept { return last_moved; }
         void set_last_moved(std::chrono::steady_clock::time_point tm) { last_moved = tm; }
-
-        json_t* to_json(json_t* o) const noexcept;
-        void from_json(const json_t* o);
     };
 }

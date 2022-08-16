@@ -24,8 +24,8 @@ namespace DR {
         bool contains(const Point pt) const noexcept;
         unsigned int area() const noexcept;
 
-        json_t* to_json(json_t* o) const noexcept;
-        void from_json(const json_t* o);
+        Serial serialize(Serial o) const noexcept;
+        void deserialize(const Serial o);
 
         bool operator==(const Rect& r) const noexcept;
         bool operator!=(const Rect& r) const noexcept;

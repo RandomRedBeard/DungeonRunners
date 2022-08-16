@@ -32,16 +32,13 @@ DR::OID DR::OID::generate() {
     return id;
 }
 
-json_t* DR::OID::to_json(json_t* o) const noexcept {
-    json_object_set_new(o, "id", json_string(id.c_str()));
+DR::Serial DR::OID::serialize(Serial o) const noexcept {
+    o.put("id", id);
     return o;
 }
 
-void DR::OID::from_json(const json_t* o) {
-    json_t* id_json = json_object_get(o, "id");
-    if (id_json) {
-        id = json_string_value(id_json);
-    }
+void DR::OID::deserialize(const Serial o) {
+    id = o.get<std::string>("id");
 }
 
 

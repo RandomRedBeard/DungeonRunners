@@ -55,8 +55,8 @@ namespace DR {
 
         Point move(Direction d) const noexcept;
 
-        json_t* to_json(json_t* o) const noexcept;
-        void from_json(const json_t* o);
+        Serial serialize(Serial o) const noexcept;
+        void deserialize(const Serial o);
 
         bool operator==(const Point& pt) const noexcept;
         bool operator!=(const Point& pt) const noexcept;

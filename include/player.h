@@ -19,7 +19,7 @@
 #include <point.h>
 
 namespace DR {
-    class Player : public Serializable, public HasId {
+    class Player : public HasId {
         OID id;
         Point pt;
         std::string name;
@@ -33,8 +33,5 @@ namespace DR {
 
         void set_point(Point pt) noexcept { this->pt = pt; }
         Point get_point() const noexcept { return pt; };
-
-        json_t* to_json(json_t* o) const noexcept;
-        void from_json(const json_t* o);
     };
 }

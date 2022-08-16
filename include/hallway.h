@@ -17,7 +17,7 @@
 #include <point.h>
 
 namespace DR {
-    class Hallway : public Serializable {
+    class Hallway {
         std::vector<Point> points;
     public:
         Hallway();
@@ -25,9 +25,6 @@ namespace DR {
 
         void add_point(Point pt) { points.push_back(pt); }
         const std::vector<Point> get_points() const noexcept { return points; }
-
-        json_t* to_json(json_t* o) const noexcept;
-        void from_json(const json_t* o);
 
         bool operator==(const Hallway& h) const noexcept;
         bool operator!=(const Hallway& h) const noexcept;

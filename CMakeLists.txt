@@ -1,10 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 project(DR)
 
-set(JANSSON_WITHOUT_TESTS ON CACHE BOOL "Disable Tests" FORCE)
-set(JANSSON_BUILD_DOCS OFF CACHE BOOL "Disable sphinx docs" FORCE)
-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/vendor/jansson")
-
 set (CMAKE_CXX_STANDARD 17)
 
 include(GNUInstallDirs)
@@ -23,7 +19,7 @@ endif()
 if (NOT MSVC)
     set(DR_LINKS m)
 else()
-    set(DR_LINKS rpcrt4.lib)
+    set(DR_LINKS rpcrt4.lib ws2_32.lib)
 endif()
 
 if (MSVC)
@@ -39,11 +35,14 @@ if (UNIX AND NOT APPLE)
     set(DR_LINKS ${DR_LINKS} ${UUID})
 endif()
 
+set(BOOST_ROOT "vendor/boost_1_80_0")
+find_package(Boost REQUIRED)
+include_directories("${Boost_INCLUDE_DIR}")
+
 # Add links
 set(DR_LINKS ${DR_LINKS} ${CURSES} ${JANSSON_LIBRARIES})
 
 include_directories(include)
-include_directories("${JANSSON_INCLUDE_DIRS}")
 
 if (MSVC)
     include_directories(external/include/pdcurses)

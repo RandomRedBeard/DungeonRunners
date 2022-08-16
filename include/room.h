@@ -39,9 +39,6 @@ namespace DR {
 
         Point rand_point() const noexcept;
 
-        json_t* to_json(json_t* o) const noexcept;
-        void from_json(const json_t* o);
-
         bool operator==(const Room& r) const noexcept;
         bool operator!=(const Room& r) const noexcept;
     };
