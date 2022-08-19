@@ -13,6 +13,6 @@
 *.app
 
 .vscode
-build
+./build
 dump
 .DS_Store
