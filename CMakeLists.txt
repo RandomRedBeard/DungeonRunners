@@ -35,6 +35,7 @@ if (UNIX AND NOT APPLE)
     set(DR_LINKS ${DR_LINKS} ${UUID})
 endif()
 
+set(Boost_USE_STATIC_LIBS ON)
 if (UNIX)
     set(BOOST_ROOT "vendor/unix/boost_1_80_0")
 else()
