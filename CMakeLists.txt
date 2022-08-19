@@ -45,7 +45,7 @@ find_package(Boost REQUIRED)
 include_directories("${Boost_INCLUDE_DIR}")
 
 # Add links
-set(DR_LINKS ${DR_LINKS} ${CURSES} ${JANSSON_LIBRARIES} Boost::boost)
+set(DR_LINKS ${DR_LINKS} ${CURSES} ${JANSSON_LIBRARIES})
 
 include_directories(include)
 
