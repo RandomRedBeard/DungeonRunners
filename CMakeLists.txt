@@ -44,7 +44,7 @@ else()
     set(BOOST_LIBRARYDIR "${CMAKE_CURRENT_SOURCE_DIR}/vendor/win/boost_1_80_0/stage/lib")
 endif()
 link_directories("${BOOST_LIBRARYDIR}")
-find_package(Boost REQUIRED COMPONENTS json)
+find_package(Boost REQUIRED)
 include_directories("${Boost_INCLUDE_DIR}")
 
 # Add links
