@@ -37,10 +37,11 @@ endif()
 
 if (UNIX)
     set(BOOST_ROOT "vendor/unix/boost_1_80_0")
+    find_package(Boost REQUIRED)
 else()
     set(BOOST_ROOT "vendor/win/boost_1_80_0")
+    find_package(Boost REQUIRED COMPONENTS json)
 endif()
-find_package(Boost REQUIRED)
 include_directories("${Boost_INCLUDE_DIR}")
 
 # Add links
