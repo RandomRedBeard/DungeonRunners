@@ -19,7 +19,7 @@ endif()
 if (NOT MSVC)
     set(DR_LINKS m)
 else()
-    set(DR_LINKS rpcrt4.lib ws2_32.lib)
+    set(DR_LINKS rpcrt4.lib)
 endif()
 
 if (MSVC)
