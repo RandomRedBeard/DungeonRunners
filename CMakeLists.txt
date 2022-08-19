@@ -36,12 +36,13 @@ if (UNIX AND NOT APPLE)
 endif()
 
 set(Boost_USE_STATIC_LIBS ON)
+set(BOOST_ALL_NO_LIB ON)
 if (UNIX)
     set(BOOST_ROOT "vendor/unix/boost_1_80_0")
 else()
     set(BOOST_ROOT "vendor/win/boost_1_80_0")
 endif()
-find_package(Boost REQUIRED)
+find_package(Boost REQUIRED COMPONENTS)
 include_directories("${Boost_INCLUDE_DIR}")
 
 # Add links
