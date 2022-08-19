@@ -72,7 +72,7 @@ void handle_accept(const boost::system::error_code& error, boost::asio::ip::tcp:
 
 void test_server() {
     boost::asio::io_context ctx;
-    auto addr = boost::asio::ip::make_address("127.0.0.1");
+    auto addr = boost::asio::ip::make_address("0.0.0.0");
     auto ep = boost::asio::ip::tcp::endpoint(addr, 8080);
 
     boost::asio::ip::tcp::acceptor acceptor(ctx);
