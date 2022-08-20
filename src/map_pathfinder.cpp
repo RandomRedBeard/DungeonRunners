@@ -11,10 +11,9 @@
 
 #include "map_pathfinder.h"
 
-DR::MapPathfinder::MapPathfinder(const Map* m) {
+DR::MapPathfinder::MapPathfinder(const Map* m) : width(m->get_width()) {
     auto rng = std::default_random_engine{};
     unsigned int height = m->get_height();
-    width = m->get_width();
     // Build pathfinder map
     unsigned int len = width * height;
     std::map<int, std::vector<int>> nodes;

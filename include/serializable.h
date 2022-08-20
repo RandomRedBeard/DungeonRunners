@@ -18,6 +18,10 @@ namespace DR {
 
     typedef boost::property_tree::ptree Serial;
 
+    /**
+     * @brief Parent struct for json serialization
+     * 
+     */
     struct Serializable {
         virtual Serial serialize(Serial o) const noexcept = 0;
         inline Serial serialize() const noexcept {
