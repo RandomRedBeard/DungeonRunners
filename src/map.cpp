@@ -13,13 +13,10 @@
 
 DR::Map::Map() {}
 
-DR::Map::Map(OID id, unsigned int width, unsigned int height, unsigned int rcols, unsigned int rrows) : id(id), width(width), height(height), rcols(rcols), rrows(rrows) {
+DR::Map::Map(unsigned int width, unsigned int height, unsigned int rcols, unsigned int rrows) : width(width), height(height), rcols(rcols), rrows(rrows) {
     buildMap();
     connectRooms();
     buildMeta();
-}
-
-DR::Map::~Map() {
 }
 
 void DR::Map::buildMeta() {
@@ -229,7 +226,6 @@ DR::Point DR::Map::randPoint() const noexcept {
 }
 
 DR::Serial DR::Map::serialize(Serial& o) const noexcept {
-    id.serialize(o);
     o.put("width", width);
     o.put("height", height);
     o.put("rcols", rcols);
@@ -256,7 +252,6 @@ DR::Serial DR::Map::serialize(Serial& o) const noexcept {
 }
 
 void DR::Map::deserialize(const Serial& o) {
-    id.deserialize(o);
     width = o.get<int>("width");
     height = o.get<int>("height");
     rcols = o.get<int>("rcols");

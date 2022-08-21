@@ -15,7 +15,7 @@
 #include <pathfinder.h>
 
 void testSamePoint() {
-    DR::Map m(DR::OID::generate(), 80, 25, 3, 3);
+    DR::Map m(80, 25, 3, 3);
     DR::Pathfinder p = m.getPathfinder();
 
     DR::Point r = m.randPoint();

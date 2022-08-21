@@ -50,7 +50,6 @@ namespace DR {
     };
 
     class Map : public Serializable {
-        OID id;
         // Phys-map attrs
         unsigned int width, height;
         // Room dims
@@ -84,10 +83,7 @@ namespace DR {
 
         Map();
         Map(Map&& m) = default;
-        Map(OID id, unsigned int width, unsigned int height, unsigned int rcols, unsigned int rrows);
-        virtual ~Map();
-
-        const OID getId() { return id; }
+        Map(unsigned int width, unsigned int height, unsigned int rcols, unsigned int rrows);
 
         unsigned int getHeight() const noexcept { return height; }
         unsigned int getWidth() const noexcept { return width; }
@@ -96,7 +92,7 @@ namespace DR {
         unsigned int getRcols() const noexcept { return rcols; }
 
         const std::map<int, Room>& getRooms() const noexcept { return rooms; }
-        std::map<int, Room>::const_iterator findRooms(int index) { return rooms.find(index); }
+        std::map<int, Room>::const_iterator findRoom(int index) { return rooms.find(index); }
         const std::vector<Hallway>& getHalls() const noexcept { return halls; }
         const std::map<int, MapMeta> getMeta() const noexcept { return meta; }
         const Pathfinder& getPathfinder() const noexcept { return pathfinder; }

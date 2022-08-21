@@ -5,11 +5,11 @@
 #include <mutex>
 
 #include <arg.h>
-#include <map_pathfinder.h>
+#include <mapPathfinder.h>
 #include <instance.h>
 #include <map.h>
 #include <pathfinder.h>
-#include <c_graphics.h>
+#include <cGraphics.h>
 #include <player.h>
 #include <monster.h>
 
@@ -18,25 +18,26 @@ bool END = false;
 using namespace std;
 using namespace DR;
 
-void monster_thread(CGraphics* g, Instance* inst, shared_ptr<Player> p, mutex* mu) {
+void monsterThread(CGraphics* g, Instance* inst, shared_ptr<Player> p, mutex* mu) {
+    const Map* pmap = inst->getMap();
     int i = 0;
-    MapPathfinder pf(&inst->pmap);
+    MapPathfinder pf(pmap);
     while (!END) {
         this_thread::sleep_for(chrono::milliseconds(500));
         auto now = chrono::steady_clock::now();
-        for (pair<const OID, shared_ptr<Monster>>& pa : inst->monsters) {
+        for (auto& pa : inst->getMonsters()) {
             shared_ptr<Monster> me = pa.second;
-            auto i_millis = std::chrono::duration_cast<std::chrono::milliseconds>(now - me->get_last_moved());
-            if (i_millis.count() <= me->get_speed()) {
-                g->put("map", me->get_point(), 'M');
+            auto i_millis = std::chrono::duration_cast<std::chrono::milliseconds>(now - me->getLastMoved());
+            if (i_millis.count() <= me->getSpeed()) {
+                g->put("map", me->getPoint(), 'M');
                 continue;
             }
 
-            mvprintw(inst->pmap.get_height() + (i % 10), 0, "%s - %d - %d   ", me->get_id().get().c_str(), i_millis.count(), me->get_speed());
+            mvprintw(pmap->getHeight() + (i % 10), 0, "%s - %d - %d   ", me->getId().get().c_str(), i_millis.count(), me->getSpeed());
             refresh();
             i++;
-            me->set_last_moved(now);
-            PointPath path = pf.find_path(me->get_point(), p->get_point());
+            me->setLastMoved(now);
+            PointPath path = pf.findPath(me->getPoint(), p->getPoint());
 
             if (path.empty()) {
                 continue;
@@ -45,14 +46,14 @@ void monster_thread(CGraphics* g, Instance* inst, shared_ptr<Player> p, mutex* m
             Point dest = path.top();
 
             lock_guard<mutex> lock(*mu);
-            if (!inst->move(me, me->get_point(), dest)) {
+            if (!inst->move(me, me->getPoint(), dest)) {
                 continue;
             }
             path.pop();
 
-            g->put("map", me->get_point(), inst->pmap.get_point(me->get_point()));
-            me->set_point(dest);
-            g->put("map", me->get_point(), 'M');
+            g->put("map", me->getPoint(), pmap->getPoint(me->getPoint()));
+            me->setPoint(dest);
+            g->put("map", me->getPoint(), 'M');
         }
     }
 }
@@ -61,36 +62,36 @@ int main(int argc, char** argv) {
     srand(time(0));
 
     ArgParser parser;
-    parser.add_long("w", 150);
-    parser.add_long("h", 40);
-    parser.add_long("cc", 3);
-    parser.add_long("rc", 3);
-    parser.add_long("mc", 10);
+    parser.addLong("w", 150);
+    parser.addLong("h", 40);
+    parser.addLong("cc", 3);
+    parser.addLong("rc", 3);
+    parser.addLong("mc", 10);
 
     parser.parse(argc, argv);
 
-    Map m(OID::generate(), parser.get_long("w"), parser.get_long("h"), parser.get_long("cc"), parser.get_long("rc"));
-    int width = m.get_width();
-    int height = m.get_height();
+    Instance inst(OID::generate(), Map(parser.getLong("w"), parser.getLong("h"), parser.getLong("cc"), parser.getLong("rc")));
 
-    Instance inst(move(m));
+    const Map* pmap = inst.getMap();
+    int width = pmap->getWidth();
+    int height = pmap->getHeight();
 
-    inst.generate_monsters(parser.get_long("mc"));
+    inst.generateMonsters(parser.getLong("mc"));
 
     CGraphics c;
     c.addwin("map", { 0, 0, width, height });
-    c.put_map("map", inst.pmap, CGraphicsRoomConfig(), '#');
+    c.putMap("map", *pmap, CGraphicsRoomConfig(), '#');
 
     shared_ptr<Player> p = make_shared<Player>(OID::generate());
-    Point pt = inst.rand_point();
-    p->set_point(pt);
-    inst.add_player(p, pt);
+    Point pt = inst.randPoint();
+    p->setPoint(pt);
+    inst.addPlayer(p, pt);
 
     mutex mu;
 
-    thread mt(monster_thread, &c, &inst, p, &mu);
+    thread mt(monsterThread, &c, &inst, p, &mu);
 
-    c.put("map", p->get_point(), '@');
+    c.put("map", p->getPoint(), '@');
 
     MEVENT e;
     int i;
@@ -116,13 +117,13 @@ int main(int argc, char** argv) {
         }
 
         lock_guard<mutex> lock(mu);
-        Point dest = p->get_point().move(d);
-        if (!inst.move(p, p->get_point(), dest)) {
+        Point dest = p->getPoint().move(d);
+        if (!inst.move(p, p->getPoint(), dest)) {
             continue;
         }
-        c.put("map", p->get_point(), inst.pmap.get_point(p->get_point()));
-        p->set_point(dest);
-        c.put("map", p->get_point(), '@');
+        c.put("map", p->getPoint(), pmap->getPoint(p->getPoint()));
+        p->setPoint(dest);
+        c.put("map", p->getPoint(), '@');
     }
 
     END = true;

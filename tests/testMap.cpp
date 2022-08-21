@@ -48,14 +48,15 @@ void testRoom() {
 }
 
 void testJson() {
-	Map m(OID::generate(), 80, 25, 3, 3);
+	Map m(80, 25, 3, 3);
 	Map m1;
 
 	Serial s = m.newSerialize();
 
 	m1.deserialize(s);
 
-	assert(m.getId() == m1.getId());
+	assert(m.getRooms() == m1.getRooms());
+	assert(m.getHalls() == m1.getHalls());
 }
 
 int main() {

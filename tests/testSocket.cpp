@@ -72,6 +72,7 @@ void handleAccept(const boost::system::error_code& error, boost::asio::ip::tcp::
 
 void testServer() {
     boost::asio::io_context ctx;
+    boost::asio::io_context::strand st(ctx);
     auto addr = boost::asio::ip::make_address("0.0.0.0");
     auto ep = boost::asio::ip::tcp::endpoint(addr, 8080);
 

@@ -11,7 +11,7 @@
 
 #include "instance.h"
 
-DR::Instance::Instance(DR::Map&& pmap) : pmap(std::move(pmap)) {}
+DR::Instance::Instance(OID id, Map&& pmap) : id(id), pmap(std::move(pmap)) {}
 
 DR::Instance::~Instance() {
 }
@@ -24,13 +24,17 @@ DR::Point DR::Instance::randPoint() const noexcept {
     return pt;
 }
 
-void DR::Instance::addPlayer(std::weak_ptr<Player> p, Point pt) {
-    auto l = p.lock();
-    players.insert({ l->getId(), p });
+void DR::Instance::addPlayer(std::shared_ptr<Player> p, Point pt) {
+    players.insert({ p->getId(), p });
     uniqueCells.insert({ pt.index(pmap.getWidth()), p });
 }
 
-size_t DR::Instance::removePlayer(OID id) {
+int DR::Instance::removePlayer(OID id) {
+    auto p = players.find(id);
+    if (p == players.end()) {
+        return -1;
+    }
+    uniqueCells.erase(p->second->getPoint().index(pmap.getWidth()));
     return players.erase(id);
 }
 
@@ -48,7 +52,7 @@ void DR::Instance::generateMonsters(int n) {
     }
 }
 
-bool DR::Instance::move(std::weak_ptr<HasId> o, Point src, Point dest) {
+bool DR::Instance::move(std::shared_ptr<HasId> o, Point src, Point dest) {
     if (!walkable(dest)) {
         return false;
     }
@@ -67,9 +71,26 @@ bool DR::Instance::walkable(Point pt) const noexcept {
 }
 
 DR::Serial DR::Instance::serialize(Serial& o) const noexcept {
+    id.serialize(o);
+    Serial playersJson;
+    for (auto& p : players) {
+        Serial playerJson;
+        playerJson.put("id", p.second->getId().get());
+        playersJson.push_back({ "", playerJson });
+    }
+
+    o.put_child("players", playersJson);
+
+    Serial monstersJson;
+    for (auto& m : monsters) {
+        monstersJson.push_back({"", m.second->newSerialize()});
+    }
+
+    o.put_child("monsters", monstersJson);
+    o.put_child("map", pmap.newSerialize());
+
     return o;
 }
 
 void DR::Instance::deserialize(const Serial& o) {
-    
 }

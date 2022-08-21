@@ -20,6 +20,7 @@
 #include <player.h>
 #include <map.h>
 #include <oid.h>
+#include <mapPathfinder.h>
 
 namespace DR {
     /**
@@ -27,16 +28,27 @@ namespace DR {
      *
      */
     class Instance : public Serializable {
-    public:
+        OID id;
         // DMLayer will not own players
-        std::map<OID, std::weak_ptr<Player>> players;
+        std::map<OID, std::shared_ptr<Player>> players;
         // This will own the monsters and map
         std::map<OID, std::shared_ptr<Monster>> monsters;
         Map pmap;
 
         // Map for unique cell placement
         // Weak pointer for non-owning
-        std::map<int, std::weak_ptr<HasId>> uniqueCells;
+        std::map<int, std::shared_ptr<HasId>> uniqueCells;
+    public:
+        // Take ownership of map
+        Instance(OID id, Map&& pmap);
+        virtual ~Instance();
+
+        const OID getId() const noexcept { return id; }
+
+        void addPlayer(std::shared_ptr<Player> p, Point pt);
+        int removePlayer(OID id);
+
+        void generateMonsters(int n);
 
         /**
          * @brief pmap.rand_point + unique_cell consideration
@@ -44,15 +56,6 @@ namespace DR {
          * @return Point
          */
         Point randPoint() const noexcept;
-    public:
-        // Take ownership of map
-        Instance(Map&& pmap);
-        virtual ~Instance();
-
-        void addPlayer(std::weak_ptr<Player> p, Point pt);
-        size_t removePlayer(OID id);
-
-        void generateMonsters(int n);
 
         /**
          * @brief Updates unique_cell map if move can be completed
@@ -64,10 +67,13 @@ namespace DR {
          * @return true
          * @return false
          */
-        bool move(std::weak_ptr<HasId> o, Point src, Point dest);
+        bool move(std::shared_ptr<HasId> o, Point src, Point dest);
 
         bool walkable(int index) const noexcept;
         bool walkable(Point pt) const noexcept;
+
+        const Map* getMap() const noexcept { return &pmap; }
+        const std::map<OID, std::shared_ptr<Monster>> getMonsters() const noexcept { return monsters; }
 
         Serial serialize(Serial& o) const noexcept;
         void deserialize(const Serial& o);

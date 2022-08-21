@@ -15,8 +15,14 @@
 using namespace DR;
 
 void testInstance() {
-    Map m(OID::generate(), 80, 25, 3, 3);
-    Instance i(std::move(m));
+    Map m(80, 25, 3, 3);
+    Instance i(OID::generate(), std::move(m));
+    i.generateMonsters(10);
+    auto p = std::make_shared<Player>(OID::generate());
+    p->setPoint(i.randPoint());
+    i.addPlayer(p, p->getPoint());
+
+    i.print();
 }
 
 int main() {
