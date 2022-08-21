@@ -22,7 +22,7 @@ unsigned int DR::Rect::area() const noexcept {
     return h * w;
 }
 
-DR::Serial DR::Rect::serialize(Serial o) const noexcept {
+DR::Serial DR::Rect::serialize(Serial& o) const noexcept {
     o.put("x", x);
     o.put("y", y);
     o.put("w", w);
@@ -30,7 +30,7 @@ DR::Serial DR::Rect::serialize(Serial o) const noexcept {
     return o;
 }
 
-void DR::Rect::deserialize(const Serial o) {
+void DR::Rect::deserialize(const Serial& o) {
     x = o.get<int>("x", 0);
     y = o.get<int>("y", 0);
     w = o.get<int>("w", 0);

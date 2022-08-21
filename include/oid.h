@@ -26,8 +26,8 @@ namespace DR {
     public:
         const std::string get() const noexcept { return id; }
 
-        Serial serialize(Serial o) const noexcept;
-        void deserialize(const Serial o);
+        Serial serialize(Serial& o) const noexcept;
+        void deserialize(const Serial& o);
 
         bool operator==(const OID& u) const noexcept;
         bool operator!=(const OID& u) const noexcept;

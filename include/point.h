@@ -35,7 +35,7 @@ namespace DR {
          */
         double dist(const Point pt) const noexcept;
 
-        struct DoublePoint unit_vector(const Point pt) const noexcept;
+        struct DoublePoint unitVector(const Point pt) const noexcept;
 
         /**
          * @brief Taxi-Cab distance
@@ -55,8 +55,8 @@ namespace DR {
 
         Point move(Direction d) const noexcept;
 
-        Serial serialize(Serial o) const noexcept;
-        void deserialize(const Serial o);
+        Serial serialize(Serial& o) const noexcept;
+        void deserialize(const Serial& o);
 
         bool operator==(const Point& pt) const noexcept;
         bool operator!=(const Point& pt) const noexcept;
@@ -103,9 +103,9 @@ namespace DR {
          */
         double dist(const Point pt) const noexcept;
 
-        DoublePoint unit_vector(const DoublePoint pt) const noexcept;
+        DoublePoint unitVector(const DoublePoint pt) const noexcept;
 
-        DoublePoint unit_vector(const Point pt) const noexcept;
+        DoublePoint unitVector(const Point pt) const noexcept;
 
         bool operator==(const DoublePoint& pt) const noexcept;
         bool operator!=(const DoublePoint& pt) const noexcept;

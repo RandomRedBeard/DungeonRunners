@@ -32,12 +32,12 @@ DR::OID DR::OID::generate() {
     return id;
 }
 
-DR::Serial DR::OID::serialize(Serial o) const noexcept {
+DR::Serial DR::OID::serialize(Serial& o) const noexcept {
     o.put("id", id);
     return o;
 }
 
-void DR::OID::deserialize(const Serial o) {
+void DR::OID::deserialize(const Serial& o) {
     id = o.get<std::string>("id");
 }
 

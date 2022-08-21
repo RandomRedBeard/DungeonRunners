@@ -29,7 +29,7 @@ public:
 	map<int, string>::const_iterator find(int i) { return m.find(i); }
 };
 
-void test_iter() {
+void testIter() {
 	Wrap w;
 	w.add({ 1, "test" });
 
@@ -39,7 +39,7 @@ void test_iter() {
 	assert(iter != m.end());
 }
 
-void test_room() {
+void testRoom() {
 	Room r1({ 0, 0, 12, 12 });
 	r1.setEa({ 2, 2 });
 	Room r2({ 0, 0, 12, 12 });
@@ -47,8 +47,20 @@ void test_room() {
 	assert(r1 == r2);
 }
 
+void testJson() {
+	Map m(OID::generate(), 80, 25, 3, 3);
+	Map m1;
+
+	Serial s = m.newSerialize();
+
+	m1.deserialize(s);
+
+	assert(m.getId() == m1.getId());
+}
+
 int main() {
-	test_room();
-	test_iter();
+	testRoom();
+	testIter();
+	testJson();
 	return 0;
 }

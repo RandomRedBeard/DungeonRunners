@@ -28,9 +28,8 @@ namespace DR {
     public:
         Pathfinder();
         Pathfinder(const T& nodes);
-        virtual ~Pathfinder();
 
-        std::stack<int> find_path(int src, int dest) const noexcept;
+        std::stack<int> findPath(int src, int dest) const noexcept;
     };
 
 }

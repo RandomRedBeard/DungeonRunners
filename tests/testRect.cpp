@@ -18,7 +18,7 @@
 using namespace std;
 using namespace DR;
 
-void test_cmp() {
+void testCmp() {
     Rect r(0, 0, 12, 12);
     Rect r1(0, 0, 12, 12);
 
@@ -26,6 +26,6 @@ void test_cmp() {
 }
 
 int main() {
-    test_cmp();
+    testCmp();
     return 0;
 }

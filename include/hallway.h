@@ -17,14 +17,17 @@
 #include <point.h>
 
 namespace DR {
-    class Hallway {
+    class Hallway : public Serializable {
         std::vector<Point> points;
     public:
         Hallway();
         virtual ~Hallway();
 
-        void add_point(Point pt) { points.push_back(pt); }
-        const std::vector<Point> get_points() const noexcept { return points; }
+        void addPoint(Point pt) { points.push_back(pt); }
+        const std::vector<Point> getPoints() const noexcept { return points; }
+
+        Serial serialize(Serial& o) const noexcept;
+        void deserialize(const Serial& o);
 
         bool operator==(const Hallway& h) const noexcept;
         bool operator!=(const Hallway& h) const noexcept;

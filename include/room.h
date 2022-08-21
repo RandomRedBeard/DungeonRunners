@@ -37,7 +37,10 @@ namespace DR {
         Point getEa() const noexcept { return ea; };
         Point getWe() const noexcept { return we; }
 
-        Point rand_point() const noexcept;
+        Point randPoint() const noexcept;
+
+        Serial serialize(Serial& o) const noexcept;
+        void deserialize(const Serial& o);
 
         bool operator==(const Room& r) const noexcept;
         bool operator!=(const Room& r) const noexcept;

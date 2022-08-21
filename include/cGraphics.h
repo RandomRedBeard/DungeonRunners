@@ -45,9 +45,9 @@ namespace DR {
         WINDOW* logger;
         int put(WINDOW* win, const Point pt, char c);
         int put(WINDOW* win, const Rect r, const CGraphicsRectConfig cfg);
-        int put_room(WINDOW* win, const Room r, const CGraphicsRoomConfig cfg);
-        int put_hallway(WINDOW* win, const Hallway h, char c);
-        int put_map(WINDOW* win, const Map& m, const CGraphicsRoomConfig cfg, char c);
+        int putRoom(WINDOW* win, const Room r, const CGraphicsRoomConfig cfg);
+        int putHallway(WINDOW* win, const Hallway h, char c);
+        int putMap(WINDOW* win, const Map& m, const CGraphicsRoomConfig cfg, char c);
     public:
         CGraphics();
         CGraphics(const CGraphics& c) = delete;
@@ -56,9 +56,9 @@ namespace DR {
         int addwin(std::string win, const Rect r);
         int put(std::string win, const Point pt, char c);
         int put(std::string win, const Rect r, const CGraphicsRectConfig cfg);
-        int put_room(std::string win, const Room r, const CGraphicsRoomConfig cfg);
-        int put_hallway(std::string win, const Hallway h, char c);
-        int put_map(std::string win, const Map& m, const CGraphicsRoomConfig cfg, char h);
+        int putRoom(std::string win, const Room r, const CGraphicsRoomConfig cfg);
+        int putHallway(std::string win, const Hallway h, char c);
+        int putMap(std::string win, const Map& m, const CGraphicsRoomConfig cfg, char h);
         int cgetch(std::string win);
     };
 }

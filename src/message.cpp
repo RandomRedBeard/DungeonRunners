@@ -13,13 +13,13 @@
 
 DR::Message::Message(std::string type, Serial&& body) : type(type), body(std::move(body)) {}
 
-DR::Serial DR::Message::serialize(Serial o) const noexcept {
+DR::Serial DR::Message::serialize(Serial& o) const noexcept {
     o.put("type", type);
     o.put_child("body", body);
     return o;
 }
 
-void DR::Message::deserialize(const Serial o) {
+void DR::Message::deserialize(const Serial& o) {
     type = o.get<std::string>("type");
     body = o.get_child("body");
 }

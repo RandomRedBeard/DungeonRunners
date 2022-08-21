@@ -17,7 +17,7 @@
 using namespace std;
 using namespace DR;
 
-void test_constructors() {
+void testConstructor() {
     Point pt;
     assert(pt.x == 0 && pt.y == 0);
 
@@ -31,7 +31,7 @@ void test_constructors() {
     assert(pt3.x == 1 && pt3.y == 1);
 }
 
-void test_distances() {
+void testDist() {
     Point pt1, pt2(1, 1);
 
     assert(pt1.l1dist(pt2) == 2);
@@ -40,13 +40,13 @@ void test_distances() {
     assert(pt1.dist(pt2) == 1);
 }
 
-void test_unit_vector() {
+void testUnitVector() {
     Point pt1(-2, -1), pt2(2, 2);
 
-    assert(pt2.unit_vector(pt1).x - (-4 / 5) < .00001);
+    assert(pt2.unitVector(pt1).x - (-4 / 5) < .00001);
 }
 
-void test_equals() {
+void testEquals() {
     Point pt1(1, 1), pt2(1, 1);
 
     assert(pt1 == pt2);
@@ -56,7 +56,7 @@ void test_equals() {
     assert(pt1 != pt2);
 }
 
-void test_assignment() {
+void testAssignment() {
     Point pt1(1, 1), pt2;
 
     pt2 = pt1;
@@ -73,11 +73,11 @@ void test_rand() {
 }
 
 int main() {
-    test_constructors();
-    test_distances();
-    test_unit_vector();
-    test_equals();
-    test_assignment();
+    testConstructor();
+    testDist();
+    testUnitVector();
+    testEquals();
+    testAssignment();
     test_rand();
     return 0;
 }

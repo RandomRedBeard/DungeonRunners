@@ -23,15 +23,15 @@ namespace DR {
      * 
      */
     struct Serializable {
-        virtual Serial serialize(Serial o) const noexcept = 0;
-        inline Serial serialize() const noexcept {
+        virtual Serial serialize(Serial& o) const noexcept = 0;
+        inline Serial newSerialize() const noexcept {
             Serial o;
             return serialize(o);
         }
-        virtual void deserialize(const Serial o) = 0;
+        virtual void deserialize(const Serial& o) = 0;
 
         void print() const noexcept {
-            auto o = serialize();
+            auto o = newSerialize();
             boost::property_tree::write_json(std::cout, o);
         }
 

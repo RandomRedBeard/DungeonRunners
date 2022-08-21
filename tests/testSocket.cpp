@@ -16,7 +16,7 @@
 #include <string>
 #include <assert.h>
 
-void test_socket() {
+void testSocket() {
     boost::asio::io_context ctx;
     auto addr = boost::asio::ip::make_address("127.0.0.1");
     auto ep = boost::asio::ip::tcp::endpoint(addr, 8080);
@@ -33,7 +33,7 @@ void test_socket() {
     auto s1 = acceptor.accept();
 
     DR::Point pt(1, 1);
-    auto tree = pt.Serializable::serialize();
+    auto tree = pt.newSerialize();
     boost::asio::streambuf wbuf;
     std::ostream os(&wbuf);
     boost::property_tree::write_json(os, tree);
@@ -62,7 +62,7 @@ void test_socket() {
     acceptor.close();
 }
 
-void handle_accept(const boost::system::error_code& error, boost::asio::ip::tcp::socket&& s) {
+void handleAccept(const boost::system::error_code& error, boost::asio::ip::tcp::socket&& s) {
     boost::asio::streambuf buf;
     boost::asio::read_until(s, buf, '\n');
     std::cout << (char*)buf.data().data();
@@ -70,7 +70,7 @@ void handle_accept(const boost::system::error_code& error, boost::asio::ip::tcp:
     s.close();
 }
 
-void test_server() {
+void testServer() {
     boost::asio::io_context ctx;
     auto addr = boost::asio::ip::make_address("0.0.0.0");
     auto ep = boost::asio::ip::tcp::endpoint(addr, 8080);
@@ -82,13 +82,14 @@ void test_server() {
     acceptor.listen();
 
     while (1) {
-        acceptor.async_accept(handle_accept);
+        acceptor.async_accept(handleAccept);
         ctx.run();
         ctx.restart();
     }
 }
 
 int main() {
-    test_socket();
-    test_server();
+    testSocket();
+    // test_server();
+    return 0;
 }

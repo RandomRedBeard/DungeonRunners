@@ -13,19 +13,19 @@
 
 #include <arg.h>
 
-void test_arg() {
+void testArg() {
     char* argv[] = { (char*)"bin", (char*)"-w",(char*)"10",(char*)"--flag" };
     DR::ArgParser parser;
-    parser.add_long("w");
-    parser.add_flag("flag");
+    parser.addLong("w");
+    parser.addFlag("flag");
 
     parser.parse(4, argv);
 
-    assert(parser.get_long("w") == 10);
-    assert(parser.get_bool("flag"));
+    assert(parser.getLong("w") == 10);
+    assert(parser.getbool("flag"));
 
 }
 
 int main() {
-    test_arg();
+    testArg();
 }

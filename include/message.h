@@ -20,7 +20,7 @@ namespace DR {
     public:
         Message(std::string type, Serial&& body);
 
-        Serial serialize(Serial o) const noexcept;
-        void deserialize(const Serial o);
+        Serial serialize(Serial& o) const noexcept;
+        void deserialize(const Serial& o);
     };
 }

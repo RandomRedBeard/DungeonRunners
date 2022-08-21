@@ -27,7 +27,7 @@ namespace DR {
         void pop();
         bool empty() const noexcept { return path.empty(); }
 
-        Point get_src() const noexcept { return src; }
-        Point get_dest() const noexcept { return dest; }
+        Point getSrc() const noexcept { return src; }
+        Point getDest() const noexcept { return dest; }
     };
 }

@@ -38,26 +38,26 @@ namespace DR {
     class ArgParser {
         std::map<std::string, Arg> argmap;
     public:
-        void add_flag(std::string k, bool def = true);
-        void add_string(std::string k, char* def = nullptr);
-        void add_double(std::string k, double def = 0);
-        void add_long(std::string k, long def = 0);
+        void addFlag(std::string k, bool def = true);
+        void addString(std::string k, char* def = nullptr);
+        void addDouble(std::string k, double def = 0);
+        void addLong(std::string k, long def = 0);
 
         int parse(int argc, char** argv);
 
-        bool get_bool(std::string k) {
+        bool getbool(std::string k) {
             return argmap[k].l;
         }
 
-        std::string get_string(std::string k) {
+        std::string getString(std::string k) {
             return argmap[k].s;
         }
 
-        double get_double(std::string k) {
+        double getDouble(std::string k) {
             return argmap[k].d;
         }
 
-        long get_long(std::string k) {
+        long getLong(std::string k) {
             return argmap[k].l;
         }
 

@@ -33,22 +33,23 @@ namespace DR {
     const static char ENTR = '+';
 
     struct MapMeta {
-        const Room room;
-        const Hallway hall;
+        Room room;
+        std::vector<Hallway> halls;
         char type;
 
-        MapMeta(const Room room) : room(room) {
+        MapMeta(Room room) : room(room) {
             type = FLOOR;
         }
 
-        MapMeta(const Room room, char type) : room(room), type(type) {}
+        MapMeta(Room room, char type) : room(room), type(type) {}
 
-        MapMeta(const Hallway hall) : hall(hall) {
+        MapMeta(Hallway hall) {
+            halls.push_back(hall);
             type = HALL;
         }
     };
 
-    class Map {
+    class Map : public Serializable {
         OID id;
         // Phys-map attrs
         unsigned int width, height;
@@ -73,12 +74,12 @@ namespace DR {
          * @brief Build layout
          *
          */
-        void build_meta();
+        void buildMeta();
 
-        void build_pathfinder();
-        Hallway build_hallway(Point pt1, Point pt2);
-        void connect_rooms();
-        void build_map();
+        void buildPathfinder();
+        Hallway buildHallway(Point pt1, Point pt2);
+        void connectRooms();
+        void buildMap();
     public:
 
         Map();
@@ -86,32 +87,35 @@ namespace DR {
         Map(OID id, unsigned int width, unsigned int height, unsigned int rcols, unsigned int rrows);
         virtual ~Map();
 
-        const OID get_id() { return id; }
+        const OID getId() { return id; }
 
-        unsigned int get_height() const noexcept { return height; }
-        unsigned int get_width() const noexcept { return width; }
+        unsigned int getHeight() const noexcept { return height; }
+        unsigned int getWidth() const noexcept { return width; }
 
-        unsigned int get_rrows() const noexcept { return rrows; }
-        unsigned int get_rcols() const noexcept { return rcols; }
+        unsigned int getRrows() const noexcept { return rrows; }
+        unsigned int getRcols() const noexcept { return rcols; }
 
-        const std::map<int, Room>& get_rooms() const noexcept { return rooms; }
-        std::map<int, Room>::const_iterator find_room(int index) { return rooms.find(index); }
-        const std::vector<Hallway>& get_halls() const noexcept { return halls; }
-        const std::map<int, MapMeta> get_meta() const noexcept { return meta; }
-        const Pathfinder& get_pathfinder() const noexcept { return pathfinder; }
+        const std::map<int, Room>& getRooms() const noexcept { return rooms; }
+        std::map<int, Room>::const_iterator findRooms(int index) { return rooms.find(index); }
+        const std::vector<Hallway>& getHalls() const noexcept { return halls; }
+        const std::map<int, MapMeta> getMeta() const noexcept { return meta; }
+        const Pathfinder& getPathfinder() const noexcept { return pathfinder; }
 
-        bool is_walkable(int index) const noexcept;
-        bool is_walkable(Point pt) const noexcept;
+        bool walkable(int index) const noexcept;
+        bool walkable(Point pt) const noexcept;
 
-        char get_point(Point pt) const noexcept;
+        char getPoint(Point pt) const noexcept;
 
         /**
          * @brief Utility method for placing on map
          *
          * @return Point
          */
-        Point rand_point() const noexcept;
+        Point randPoint() const noexcept;
 
-        PointPath find_path(Point src, Point dest);
+        PointPath findPath(Point src, Point dest);
+
+        Serial serialize(Serial& o) const noexcept;
+        void deserialize(const Serial& o);
     };
 } // namespace DR

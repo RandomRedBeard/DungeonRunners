@@ -14,7 +14,7 @@
 
 #include <oid.h>
 
-void test_oid() {
+void testOid() {
     DR::OID o = DR::OID::generate();
     o.print();
 
@@ -26,5 +26,5 @@ void test_oid() {
 }
 
 int main() {
-    test_oid();
+    testOid();
 }

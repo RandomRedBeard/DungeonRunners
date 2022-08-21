@@ -21,7 +21,7 @@ double DR::Point::dist(const Point pt) const noexcept {
     return std::sqrt(std::pow(x - pt.x, 2) + std::pow(y - pt.y, 2));
 }
 
-DR::DoublePoint DR::Point::unit_vector(const Point pt) const noexcept {
+DR::DoublePoint DR::Point::unitVector(const Point pt) const noexcept {
     double mag = dist(pt);
     return DoublePoint((pt.x - x) / mag, (pt.y - y) / mag);
 }
@@ -53,13 +53,13 @@ DR::Point DR::Point::move(Direction d) const noexcept {
     return {x, y};
 }
 
-DR::Serial DR::Point::serialize(Serial root) const noexcept {
-    root.put("x", x);
-    root.put("y", y);
-    return root;
+DR::Serial DR::Point::serialize(Serial& o) const noexcept {
+    o.put("x", x);
+    o.put("y", y);
+    return o;
 }
 
-void DR::Point::deserialize(const Serial o) {
+void DR::Point::deserialize(const Serial& o) {
     x = o.get<int>("x", 0);
     y = o.get<int>("y", 0);
 }
@@ -92,12 +92,12 @@ double DR::DoublePoint::dist(const Point pt) const noexcept {
     return std::sqrt(std::pow(x - pt.x, 2) + std::pow(y - pt.y, 2));
 }
 
-DR::DoublePoint DR::DoublePoint::unit_vector(const Point pt) const noexcept {
+DR::DoublePoint DR::DoublePoint::unitVector(const Point pt) const noexcept {
     double mag = dist(pt);
     return DoublePoint((pt.x - x) / mag, (pt.y - y) / mag);
 }
 
-DR::DoublePoint DR::DoublePoint::unit_vector(const DoublePoint pt) const noexcept {
+DR::DoublePoint DR::DoublePoint::unitVector(const DoublePoint pt) const noexcept {
     double mag = dist(pt);
     return DoublePoint((pt.x - x) / mag, (pt.y - y) / mag);
 }

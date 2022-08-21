@@ -25,6 +25,6 @@ namespace DR {
     public:
         MapPathfinder(const Map* m);
 
-        PointPath find_path(Point src, Point dest);
+        PointPath findPath(Point src, Point dest);
     };
 }

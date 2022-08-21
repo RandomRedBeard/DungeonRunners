@@ -15,9 +15,7 @@ DR::Pathfinder::Pathfinder() {}
 
 DR::Pathfinder::Pathfinder(const T& nodes) : nodes(nodes) {}
 
-DR::Pathfinder::~Pathfinder() {}
-
-std::stack<int> DR::Pathfinder::find_path(int src, int dest) const noexcept {
+std::stack<int> DR::Pathfinder::findPath(int src, int dest) const noexcept {
     if (src == dest) {
         return std::stack<int>();
     }
@@ -35,7 +33,7 @@ std::stack<int> DR::Pathfinder::find_path(int src, int dest) const noexcept {
     bool found = false;
 
     q.push(src);
-    bit_flip(v.get(), src);
+    flipBit(v.get(), src);
 
     while (!q.empty()) {
         int i = q.front();
@@ -53,12 +51,12 @@ std::stack<int> DR::Pathfinder::find_path(int src, int dest) const noexcept {
 
         for (int n : iter->second) {
             // Skip if node has been visited
-            if (is_bit_flipped(v.get(), n)) {
+            if (isBitFlipped(v.get(), n)) {
                 continue;
             }
 
             rmap[n] = i;
-            bit_flip(v.get(), n);
+            flipBit(v.get(), n);
             q.push(n);
         }
 

@@ -19,19 +19,22 @@
 #include <point.h>
 
 namespace DR {
-    class Player : public HasId {
+    class Player : public HasId, public Serializable {
         OID id;
         Point pt;
         std::string name;
     public:
         Player(OID id);
 
-        const OID get_id() const noexcept { return id; }
+        const OID getId() const noexcept { return id; }
 
-        void set_name(std::string name) noexcept { this->name = name; }
-        std::string get_name() const noexcept { return name; }
+        void setName(std::string name) noexcept { this->name = name; }
+        std::string getName() const noexcept { return name; }
 
-        void set_point(Point pt) noexcept { this->pt = pt; }
-        Point get_point() const noexcept { return pt; };
+        void setPoint(Point pt) noexcept { this->pt = pt; }
+        Point getPoint() const noexcept { return pt; };
+
+        Serial serialize(Serial& o) const noexcept;
+        void deserialize(const Serial& o);
     };
 }

@@ -9,36 +9,36 @@
  *
  */
 
-#include "map_pathfinder.h"
+#include "mapPathfinder.h"
 
-DR::MapPathfinder::MapPathfinder(const Map* m) : width(m->get_width()) {
+DR::MapPathfinder::MapPathfinder(const Map* m) : width(m->getWidth()) {
     auto rng = std::default_random_engine{};
-    unsigned int height = m->get_height();
+    unsigned int height = m->getHeight();
     // Build pathfinder map
     unsigned int len = width * height;
     std::map<int, std::vector<int>> nodes;
 
     for (unsigned int i = 0; i < len; i++) {
-        if (!m->is_walkable(i)) {
+        if (!m->walkable(i)) {
             continue;;
         }
 
         std::vector<int> neighbors;
 
         // Up
-        if (i - width >= 0 && m->is_walkable(i - width)) {
+        if (i - width >= 0 && m->walkable(i - width)) {
             neighbors.push_back(i - width);
         }
 
-        if (i + width < len && m->is_walkable(i + width)) {
+        if (i + width < len && m->walkable(i + width)) {
             neighbors.push_back(i + width);
         }
 
-        if (i % width != 0 && m->is_walkable(i - 1)) {
+        if (i % width != 0 && m->walkable(i - 1)) {
             neighbors.push_back(i - 1);
         }
 
-        if (i % width != width - 1 && m->is_walkable(i + 1)) {
+        if (i % width != width - 1 && m->walkable(i + 1)) {
             neighbors.push_back(i + 1);
         }
 
@@ -52,6 +52,6 @@ DR::MapPathfinder::MapPathfinder(const Map* m) : width(m->get_width()) {
     pf = Pathfinder(nodes);
 }
 
-DR::PointPath DR::MapPathfinder::find_path(Point src, Point dest) {
-    return PointPath(pf.find_path(src.index(width), dest.index(width)), src, dest, width);
+DR::PointPath DR::MapPathfinder::findPath(Point src, Point dest) {
+    return PointPath(pf.findPath(src.index(width), dest.index(width)), src, dest, width);
 }

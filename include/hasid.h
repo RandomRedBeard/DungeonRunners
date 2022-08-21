@@ -16,6 +16,6 @@
 namespace DR {
     class HasId {
     public:
-        virtual const OID get_id() const noexcept = 0;
+        virtual const OID getId() const noexcept = 0;
     };
 }

@@ -21,7 +21,7 @@
 #include <hasid.h>
 
 namespace DR {
-    class Monster : public HasId {
+    class Monster : public HasId, public Serializable {
         OID id;
         std::string name;
         Point pt;
@@ -31,18 +31,21 @@ namespace DR {
     public:
         Monster(OID id, std::string name);
 
-        const OID get_id() const noexcept { return id; }
+        const OID getId() const noexcept { return id; }
 
-        void set_point(Point pt) noexcept { this->pt = pt; }
-        Point get_point() const noexcept { return pt; };
+        void setPoint(Point pt) noexcept { this->pt = pt; }
+        Point getPoint() const noexcept { return pt; };
 
-        void set_path(PointPath path) { this->path = path; }
-        PointPath get_path() { return path; }
+        void setPath(PointPath path) { this->path = path; }
+        PointPath getPath() { return path; }
 
-        int get_speed() const noexcept { return speed; }
-        void set_speed(int speed) { this->speed = speed; }
+        int getSpeed() const noexcept { return speed; }
+        void setSpeed(int speed) { this->speed = speed; }
 
-        const std::chrono::steady_clock::time_point get_last_moved() const noexcept { return last_moved; }
-        void set_last_moved(std::chrono::steady_clock::time_point tm) { last_moved = tm; }
+        const std::chrono::steady_clock::time_point getLastMoved() const noexcept { return last_moved; }
+        void setLastMoved(std::chrono::steady_clock::time_point tm) { last_moved = tm; }
+
+        Serial serialize(Serial& o) const noexcept;
+        void deserialize(const Serial& o);
     };
 }

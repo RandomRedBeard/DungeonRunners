@@ -14,12 +14,12 @@
 
 using namespace DR;
 
-void test_instance() {
+void testInstance() {
     Map m(OID::generate(), 80, 25, 3, 3);
     Instance i(std::move(m));
 }
 
 int main() {
-    test_instance();
+    testInstance();
     return 0;
 }

@@ -16,48 +16,60 @@ DR::Instance::Instance(DR::Map&& pmap) : pmap(std::move(pmap)) {}
 DR::Instance::~Instance() {
 }
 
-DR::Point DR::Instance::rand_point() const noexcept {
+DR::Point DR::Instance::randPoint() const noexcept {
     Point pt;
     do {
-        pt = pmap.rand_point();
-    } while (!is_walkable(pt));
+        pt = pmap.randPoint();
+    } while (!walkable(pt));
     return pt;
 }
 
-void DR::Instance::add_player(std::weak_ptr<Player> p, Point pt) {
+void DR::Instance::addPlayer(std::weak_ptr<Player> p, Point pt) {
     auto l = p.lock();
-    players.insert({l->get_id(), p});
-    unique_cells.insert({ pt.index(pmap.get_width()), p });
+    players.insert({ l->getId(), p });
+    uniqueCells.insert({ pt.index(pmap.getWidth()), p });
 }
 
-void DR::Instance::generate_monsters(int n) {
+size_t DR::Instance::removePlayer(OID id) {
+    return players.erase(id);
+}
+
+void DR::Instance::generateMonsters(int n) {
     for (int i = 0; i < n; i++) {
         std::shared_ptr<Monster> m = std::make_shared<Monster>(OID::generate(), "Ice Monster");
-        Point pt = rand_point();
-        m->set_point(pt);
-        m->set_last_moved(std::chrono::steady_clock::now());
-        m->set_speed(500 * (1 + rand() % 3));
+        Point pt = randPoint();
+        m->setPoint(pt);
+        m->setLastMoved(std::chrono::steady_clock::now());
+        m->setSpeed(500 * (1 + rand() % 3));
 
         // Add to containers
-        monsters.insert({ m->get_id(), m });
-        unique_cells.insert({ pt.index(pmap.get_width()), m });
+        monsters.insert({ m->getId(), m });
+        uniqueCells.insert({ pt.index(pmap.getWidth()), m });
     }
 }
 
 bool DR::Instance::move(std::weak_ptr<HasId> o, Point src, Point dest) {
-    if (!is_walkable(dest)) {
+    if (!walkable(dest)) {
         return false;
     }
 
-    unique_cells.erase(src.index(pmap.get_width()));
-    unique_cells.insert({ dest.index(pmap.get_width()), o });
+    uniqueCells.erase(src.index(pmap.getWidth()));
+    uniqueCells.insert({ dest.index(pmap.getWidth()), o });
     return true;
 }
 
-bool DR::Instance::is_walkable(int index) const noexcept {
-    return pmap.is_walkable(index) && unique_cells.find(index) == unique_cells.end();
+bool DR::Instance::walkable(int index) const noexcept {
+    return pmap.walkable(index) && uniqueCells.find(index) == uniqueCells.end();
 }
 
-bool DR::Instance::is_walkable(Point pt) const noexcept {
-    return is_walkable(pt.index(pmap.get_width()));
+bool DR::Instance::walkable(Point pt) const noexcept {
+    return walkable(pt.index(pmap.getWidth()));
+}
+
+DR::Serial DR::Instance::serialize(Serial& o) const noexcept {
+    return o;
+}
+
+void DR::Instance::deserialize(const Serial& o) {
+    
 }

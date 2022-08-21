@@ -24,8 +24,8 @@ namespace DR {
         bool contains(const Point pt) const noexcept;
         unsigned int area() const noexcept;
 
-        Serial serialize(Serial o) const noexcept;
-        void deserialize(const Serial o);
+        Serial serialize(Serial& o) const noexcept;
+        void deserialize(const Serial& o);
 
         bool operator==(const Rect& r) const noexcept;
         bool operator!=(const Rect& r) const noexcept;

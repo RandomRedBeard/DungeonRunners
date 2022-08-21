@@ -14,15 +14,15 @@
 using namespace std;
 using namespace DR;
 
-void test_monster() {
+void testMonster() {
     srand(time(0));
     Monster mo(OID::generate(), "Ice Monster");
-    mo.set_last_moved(chrono::steady_clock::now());
-    mo.set_speed(500 * (1 + rand() % 3));
+    mo.setLastMoved(chrono::steady_clock::now());
+    mo.setSpeed(500 * (1 + rand() % 3));
 
-    printf("%d\n", mo.get_speed());
+    printf("%d\n", mo.getSpeed());
 }
 
 int main() {
-    test_monster();
+    testMonster();
 }

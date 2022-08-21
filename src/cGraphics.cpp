@@ -9,7 +9,7 @@
  *
  */
 
-#include "c_graphics.h"
+#include "cGraphics.h"
 
 DR::CGraphics::CGraphics() {
     initscr();
@@ -94,7 +94,7 @@ int DR::CGraphics::put(std::string win, const Rect r, const CGraphicsRectConfig 
     return put(iter->second, r, cfg);
 }
 
-int DR::CGraphics::put_room(WINDOW* win, const Room r, const CGraphicsRoomConfig cfg) {
+int DR::CGraphics::putRoom(WINDOW* win, const Room r, const CGraphicsRoomConfig cfg) {
     put(win, r, cfg);
     if (r.getEa().x > 0) {
         put(win, r.getEa(), cfg.entr);
@@ -115,51 +115,51 @@ int DR::CGraphics::put_room(WINDOW* win, const Room r, const CGraphicsRoomConfig
     return 0;
 }
 
-int DR::CGraphics::put_room(std::string win, const Room r, const CGraphicsRoomConfig cfg) {
+int DR::CGraphics::putRoom(std::string win, const Room r, const CGraphicsRoomConfig cfg) {
     std::map<std::string, WINDOW*>::iterator iter = windows.find(win);
     if (iter == windows.end()) {
         return -1;
     }
 
-    return put_room(iter->second, r, cfg);
+    return putRoom(iter->second, r, cfg);
 }
 
-int DR::CGraphics::put_hallway(WINDOW* win, const Hallway h, char c) {
-    for (Point pt : h.get_points()) {
+int DR::CGraphics::putHallway(WINDOW* win, const Hallway h, char c) {
+    for (Point pt : h.getPoints()) {
         put(win, pt, c);
     }
 
     return 0;
 }
 
-int DR::CGraphics::put_hallway(std::string win, const Hallway h, char c) {
+int DR::CGraphics::putHallway(std::string win, const Hallway h, char c) {
     std::map<std::string, WINDOW*>::iterator iter = windows.find(win);
     if (iter == windows.end()) {
         return -1;
     }
 
-    return put_hallway(iter->second, h, c);
+    return putHallway(iter->second, h, c);
 }
 
-int DR::CGraphics::put_map(WINDOW* win, const Map& m, const CGraphicsRoomConfig cfg, char c) {
-    for (std::pair<int, Room> r : m.get_rooms()) {
-        put_room(win, r.second, cfg);
+int DR::CGraphics::putMap(WINDOW* win, const Map& m, const CGraphicsRoomConfig cfg, char c) {
+    for (std::pair<int, Room> r : m.getRooms()) {
+        putRoom(win, r.second, cfg);
     }
 
-    for (Hallway h : m.get_halls()) {
-        put_hallway(win, h, c);
+    for (Hallway h : m.getHalls()) {
+        putHallway(win, h, c);
     }
 
     return 0;
 }
 
-int DR::CGraphics::put_map(std::string win, const Map& m, const CGraphicsRoomConfig cfg, char c) {
+int DR::CGraphics::putMap(std::string win, const Map& m, const CGraphicsRoomConfig cfg, char c) {
     std::map<std::string, WINDOW*>::iterator iter = windows.find(win);
     if (iter == windows.end()) {
         return -1;
     }
 
-    return put_map(iter->second, m, cfg, c);
+    return putMap(iter->second, m, cfg, c);
 }
 
 

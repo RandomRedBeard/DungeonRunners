@@ -46,11 +46,11 @@ namespace DR {
         return rval < p;
     }
 
-    static inline void bit_flip(char* v, int i) {
+    static inline void flipBit(char* v, int i) {
         *(v + (i / 8)) |= (1 << (i % 8));
     }
 
-    static inline int is_bit_flipped(const char* v, int i) {
+    static inline int isBitFlipped(const char* v, int i) {
         return *(v + (i / 8)) & (1 << (i % 8));
     }
 }

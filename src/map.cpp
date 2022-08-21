@@ -14,15 +14,15 @@
 DR::Map::Map() {}
 
 DR::Map::Map(OID id, unsigned int width, unsigned int height, unsigned int rcols, unsigned int rrows) : id(id), width(width), height(height), rcols(rcols), rrows(rrows) {
-    build_map();
-    connect_rooms();
-    build_meta();
+    buildMap();
+    connectRooms();
+    buildMeta();
 }
 
 DR::Map::~Map() {
 }
 
-void DR::Map::build_meta() {
+void DR::Map::buildMeta() {
     unsigned int len = width * height;
 
     for (std::pair<int, Room> p : rooms) {
@@ -40,33 +40,33 @@ void DR::Map::build_meta() {
         }
 
         if (r.getSo().x > 0) {
-            int pt = r.getSo().index(width);         
-			meta.insert({ pt, MapMeta(r, ENTR) });
+            int pt = r.getSo().index(width);
+            meta.insert({ pt, MapMeta(r, ENTR) });
 
         }
 
         if (r.getWe().x > 0) {
-            int pt = r.getWe().index(width);      
+            int pt = r.getWe().index(width);
             meta.insert({ pt, MapMeta(r, ENTR) });
 
         }
 
         if (r.getNo().x > 0) {
-            int pt = r.getNo().index(width);    
+            int pt = r.getNo().index(width);
             meta.insert({ pt, MapMeta(r, ENTR) });
 
         }
     }
 
     for (Hallway h : halls) {
-        for (Point p : h.get_points()) {
+        for (Point p : h.getPoints()) {
             int pt = p.index(width);
             meta.insert({ pt, MapMeta(h) });
         }
     }
 }
 
-DR::Hallway DR::Map::build_hallway(Point pt1, Point pt2) {
+DR::Hallway DR::Map::buildHallway(Point pt1, Point pt2) {
     int xleft = std::abs(pt1.x - pt2.x), yleft = std::abs(pt1.y - pt2.y);
     int xdir = 0, ydir = 0, dir;
     Point index = pt1;
@@ -87,7 +87,7 @@ DR::Hallway DR::Map::build_hallway(Point pt1, Point pt2) {
     }
 
     while (index != pt2) {
-        h.add_point(index);
+        h.addPoint(index);
 
         if (xleft > std::rand() % (yleft + 1)) {
             dir = 0;
@@ -106,11 +106,11 @@ DR::Hallway DR::Map::build_hallway(Point pt1, Point pt2) {
         }
     }
 
-    h.add_point(index);
+    h.addPoint(index);
     return h;
 }
 
-void DR::Map::connect_rooms() {
+void DR::Map::connectRooms() {
     // Iter by ref
     for (std::pair<const int, DR::Room>& r : rooms) {
         int index = r.first;
@@ -137,7 +137,7 @@ void DR::Map::connect_rooms() {
 
             // Build hallway
             Point ea = src.getEa(), we = dest.getWe();
-            Hallway h = build_hallway({ ea.x + 1, ea.y }, { we.x - 1, we.y });
+            Hallway h = buildHallway({ ea.x + 1, ea.y }, { we.x - 1, we.y });
             halls.push_back(h);
 
             break;
@@ -164,7 +164,7 @@ void DR::Map::connect_rooms() {
 
             // Build hallway
             Point so = src.getSo(), no = dest.getNo();
-            Hallway h = build_hallway({ so.x, so.y + 1 }, { no.x, no.y - 1 });
+            Hallway h = buildHallway({ so.x, so.y + 1 }, { no.x, no.y - 1 });
             halls.push_back(h);
 
             break;
@@ -172,7 +172,7 @@ void DR::Map::connect_rooms() {
     }
 }
 
-void DR::Map::build_map() {
+void DR::Map::buildMap() {
     unsigned int maxrw = width / rcols;
     unsigned int maxrh = height / rrows;
     unsigned int rcount = rrows * rcols;
@@ -207,24 +207,71 @@ void DR::Map::build_map() {
     }
 }
 
-bool DR::Map::is_walkable(int index) const noexcept {
-    auto iter = meta.find(index);
-    return iter != meta.end();
+bool DR::Map::walkable(int index) const noexcept {
+    return meta.find(index) != meta.end();
 }
 
 
-bool DR::Map::is_walkable(Point pt) const noexcept {
-    return is_walkable(pt.index(width));
+bool DR::Map::walkable(Point pt) const noexcept {
+    return walkable(pt.index(width));
 }
 
-char DR::Map::get_point(Point pt) const noexcept {
+char DR::Map::getPoint(Point pt) const noexcept {
     auto iter = meta.find(pt.index(width));
-	return iter == meta.end() ? ' ' : iter->second.type;
+    return iter == meta.end() ? ' ' : iter->second.type;
 }
 
-DR::Point DR::Map::rand_point() const noexcept {
+DR::Point DR::Map::randPoint() const noexcept {
     auto it = rooms.begin();
     std::advance(it, std::rand() % rooms.size());
     Room r = it->second;
-    return r.rand_point();
+    return r.randPoint();
+}
+
+DR::Serial DR::Map::serialize(Serial& o) const noexcept {
+    id.serialize(o);
+    o.put("width", width);
+    o.put("height", height);
+    o.put("rcols", rcols);
+    o.put("rrows", rrows);
+
+    Serial roomsJson;
+    for (auto& p : rooms) {
+        Serial roomInst;
+        roomInst.put("index", p.first);
+        roomInst.put_child("room", p.second.newSerialize());
+        roomsJson.push_back({ "", roomInst });
+    }
+
+    o.put_child("rooms", roomsJson);
+
+    Serial hallsJson;
+    for (auto& p : halls) {
+        hallsJson.push_back({ "", p.newSerialize() });
+    }
+
+    o.put_child("halls", hallsJson);
+
+    return o;
+}
+
+void DR::Map::deserialize(const Serial& o) {
+    id.deserialize(o);
+    width = o.get<int>("width");
+    height = o.get<int>("height");
+    rcols = o.get<int>("rcols");
+    rrows = o.get<int>("rrows");
+
+    for (auto& p : o.get_child("rooms")) {
+        Room r;
+        int index = p.second.get<int>("index");
+        r.deserialize(p.second.get_child("room"));
+        rooms.insert({ index, r });
+    }
+
+    for (auto& p : o.get_child("halls")) {
+        Hallway h;
+        h.deserialize(p.second);
+        halls.push_back(h);
+    }
 }

@@ -12,6 +12,7 @@
 #pragma once
 
 #include <map>
+#include <string>
 #include <vector>
 
 #include <hasid.h>
@@ -25,7 +26,7 @@ namespace DR {
      * @brief A single map instance
      *
      */
-    class Instance {
+    class Instance : public Serializable {
     public:
         // DMLayer will not own players
         std::map<OID, std::weak_ptr<Player>> players;
@@ -35,24 +36,23 @@ namespace DR {
 
         // Map for unique cell placement
         // Weak pointer for non-owning
-        std::map<int, std::weak_ptr<HasId>> unique_cells;
-
-        std::map<int, std::weak_ptr<HasId>> shared_cells;
+        std::map<int, std::weak_ptr<HasId>> uniqueCells;
 
         /**
          * @brief pmap.rand_point + unique_cell consideration
          *
          * @return Point
          */
-        Point rand_point() const noexcept;
+        Point randPoint() const noexcept;
     public:
         // Take ownership of map
         Instance(Map&& pmap);
         virtual ~Instance();
 
-        void add_player(std::weak_ptr<Player> p, Point pt);
+        void addPlayer(std::weak_ptr<Player> p, Point pt);
+        size_t removePlayer(OID id);
 
-        void generate_monsters(int n);
+        void generateMonsters(int n);
 
         /**
          * @brief Updates unique_cell map if move can be completed
@@ -66,7 +66,10 @@ namespace DR {
          */
         bool move(std::weak_ptr<HasId> o, Point src, Point dest);
 
-        bool is_walkable(int index) const noexcept;
-        bool is_walkable(Point pt) const noexcept;
+        bool walkable(int index) const noexcept;
+        bool walkable(Point pt) const noexcept;
+
+        Serial serialize(Serial& o) const noexcept;
+        void deserialize(const Serial& o);
     };
 }

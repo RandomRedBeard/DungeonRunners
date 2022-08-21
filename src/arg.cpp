@@ -11,19 +11,19 @@
 
 #include "arg.h"
 
-void DR::ArgParser::add_flag(std::string k, bool def) {
+void DR::ArgParser::addFlag(std::string k, bool def) {
     argmap.insert({ k, Arg(Arg::FLAG, def) });
 }
 
-void DR::ArgParser::add_string(std::string k, char* def) {
+void DR::ArgParser::addString(std::string k, char* def) {
     argmap.insert({ k, Arg(Arg::STRING, def) });
 }
 
-void DR::ArgParser::add_double(std::string k, double def) {
+void DR::ArgParser::addDouble(std::string k, double def) {
     argmap.insert({ k, Arg(Arg::DOUBLE, def) });
 }
 
-void DR::ArgParser::add_long(std::string k, long def) {
+void DR::ArgParser::addLong(std::string k, long def) {
     argmap.insert({ k, Arg(Arg::LONG, def) });
 }
 
