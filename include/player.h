@@ -24,8 +24,10 @@ namespace DR {
         Point pt;
         std::string name;
     public:
+        Player();
         Player(OID id);
 
+        void setId(OID id) { this->id = id; }
         const OID getId() const noexcept { return id; }
 
         void setName(std::string name) noexcept { this->name = name; }

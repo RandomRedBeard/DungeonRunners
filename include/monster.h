@@ -29,6 +29,7 @@ namespace DR {
         int speed = NORMAL;
         std::chrono::steady_clock::time_point last_moved;
     public:
+        Monster();
         Monster(OID id, std::string name);
 
         const OID getId() const noexcept { return id; }

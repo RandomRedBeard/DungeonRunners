@@ -22,7 +22,7 @@ void testArg() {
     parser.parse(4, argv);
 
     assert(parser.getLong("w") == 10);
-    assert(parser.getbool("flag"));
+    assert(parser.getBool("flag"));
 
 }
 

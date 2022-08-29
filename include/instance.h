@@ -39,14 +39,18 @@ namespace DR {
         // Weak pointer for non-owning
         std::map<int, std::shared_ptr<HasId>> uniqueCells;
     public:
+        Instance();
         // Take ownership of map
         Instance(OID id, Map&& pmap);
+        Instance(Instance&& instance) = default;
+        Instance& operator=(Instance&& instance) = default;
         virtual ~Instance();
 
         const OID getId() const noexcept { return id; }
 
         void addPlayer(std::shared_ptr<Player> p, Point pt);
         int removePlayer(OID id);
+        const std::map<OID, std::shared_ptr<Player>>& getPlayers() const noexcept { return players; }
 
         void generateMonsters(int n);
 
@@ -73,7 +77,7 @@ namespace DR {
         bool walkable(Point pt) const noexcept;
 
         const Map* getMap() const noexcept { return &pmap; }
-        const std::map<OID, std::shared_ptr<Monster>> getMonsters() const noexcept { return monsters; }
+        const std::map<OID, std::shared_ptr<Monster>>& getMonsters() const noexcept { return monsters; }
 
         Serial serialize(Serial& o) const noexcept;
         void deserialize(const Serial& o);

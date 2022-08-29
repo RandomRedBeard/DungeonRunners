@@ -11,6 +11,8 @@
 
 #include "monster.h"
 
+DR::Monster::Monster() {}
+
 DR::Monster::Monster(OID id, std::string name) : id(id), name(name) {}
 
 DR::Serial DR::Monster::serialize(Serial& o) const noexcept {

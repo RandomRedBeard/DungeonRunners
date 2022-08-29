@@ -11,6 +11,9 @@
 
 #include "instance.h"
 
+// Do nothing for deserialization
+DR::Instance::Instance() {}
+
 DR::Instance::Instance(OID id, Map&& pmap) : id(id), pmap(std::move(pmap)) {}
 
 DR::Instance::~Instance() {
@@ -74,16 +77,14 @@ DR::Serial DR::Instance::serialize(Serial& o) const noexcept {
     id.serialize(o);
     Serial playersJson;
     for (auto& p : players) {
-        Serial playerJson;
-        playerJson.put("id", p.second->getId().get());
-        playersJson.push_back({ "", playerJson });
+        playersJson.push_back({ "", p.second->newSerialize() });
     }
 
     o.put_child("players", playersJson);
 
     Serial monstersJson;
     for (auto& m : monsters) {
-        monstersJson.push_back({"", m.second->newSerialize()});
+        monstersJson.push_back({ "", m.second->newSerialize() });
     }
 
     o.put_child("monsters", monstersJson);
@@ -93,4 +94,21 @@ DR::Serial DR::Instance::serialize(Serial& o) const noexcept {
 }
 
 void DR::Instance::deserialize(const Serial& o) {
+    id.deserialize(o);
+
+    pmap.deserialize(o.get_child("map"));
+
+    for (auto& p : o.get_child("players")) {
+        std::shared_ptr<Player> player = std::make_shared<Player>();
+        player->deserialize(p.second);
+        players.insert({ player->getId(), player });
+        uniqueCells.insert({ player->getPoint().index(pmap.getWidth()), player });
+    }
+
+    for (auto& m : o.get_child("monsters")) {
+        std::shared_ptr<Monster> monster = std::make_shared<Monster>();
+        monster->deserialize(m.second);
+        monsters.insert({ monster->getId(), monster });
+        uniqueCells.insert({ monster->getPoint().index(pmap.getWidth()), monster });
+    }
 }

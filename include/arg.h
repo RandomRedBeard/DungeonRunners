@@ -45,7 +45,7 @@ namespace DR {
 
         int parse(int argc, char** argv);
 
-        bool getbool(std::string k) {
+        bool getBool(std::string k) {
             return argmap[k].l;
         }
 

@@ -1,9 +1,23 @@
+/**
+ * @file main.cpp
+ * @author your name (you@domain.com)
+ * @brief
+ * @version 0.1
+ * @date 2022-08-21
+ *
+ * @copyright Copyright (c) 2022
+ *
+ */
+
+#include <boost/asio.hpp>
+#include <boost/function.hpp>
 
 #include <iostream>
 #include <thread>
 #include <chrono>
 #include <mutex>
 
+#include <message.h>
 #include <arg.h>
 #include <mapPathfinder.h>
 #include <instance.h>
@@ -58,6 +72,53 @@ void monsterThread(CGraphics* g, Instance* inst, shared_ptr<Player> p, mutex* mu
     }
 }
 
+void asyncThread(boost::asio::io_context* ctx) {
+    ctx->run();
+}
+
+class Client {
+    boost::asio::ip::tcp::socket socket_;
+public:
+    Client(boost::asio::io_context& ctx, boost::asio::ip::tcp::endpoint ep) : socket_(ctx) {
+        socket_.async_connect(ep, [this](const boost::system::error_code& error) {
+            boost::asio::streambuf buf;
+            boost::asio::async_read_until(socket_, buf, '#', [this](const boost::system::error_code& error, std::size_t size) {
+                    
+                });
+            });
+    }
+
+    void close() {
+        socket_.close();
+    }
+};
+
+class Server {
+    boost::asio::ip::tcp::acceptor acceptor;
+public:
+    Server(boost::asio::io_context& ctx, boost::asio::ip::tcp::endpoint ep) : acceptor(ctx) {
+        acceptor.open(ep.protocol());
+        acceptor.set_option(boost::asio::ip::tcp::acceptor::reuse_address(true));
+        acceptor.bind(ep);
+        acceptor.listen();
+    }
+
+    void close() {
+        acceptor.close();
+    }
+
+    void handleAccept(const boost::system::error_code& error, boost::asio::ip::tcp::socket&& s) {
+        asyncAccept();
+    }
+
+    void asyncAccept() {
+        acceptor.async_accept([this](const boost::system::error_code& error, boost::asio::ip::tcp::socket&& s) {
+            handleAccept(error, move(s));
+            });
+    }
+
+};
+
 int main(int argc, char** argv) {
     srand(time(0));
 
@@ -67,8 +128,20 @@ int main(int argc, char** argv) {
     parser.addLong("cc", 3);
     parser.addLong("rc", 3);
     parser.addLong("mc", 10);
+    parser.addString("host", (char*)"0.0.0.0");
+    parser.addLong("port", 8080);
+    parser.addFlag("join");
 
     parser.parse(argc, argv);
+
+    boost::asio::io_context ctx;
+    boost::asio::io_context::strand st(ctx);
+    auto addr = boost::asio::ip::make_address(parser.getString("host"));
+    auto ep = boost::asio::ip::tcp::endpoint(addr, parser.getLong("port"));
+
+    Server server(ctx, ep);
+    server.asyncAccept();
+    thread athread(asyncThread, &ctx);
 
     Instance inst(OID::generate(), Map(parser.getLong("w"), parser.getLong("h"), parser.getLong("cc"), parser.getLong("rc")));
 
@@ -128,6 +201,9 @@ int main(int argc, char** argv) {
 
     END = true;
     mt.join();
+
+    server.close();
+    ctx.stop();
 
     return 0;
 }

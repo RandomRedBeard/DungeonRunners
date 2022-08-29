@@ -11,6 +11,10 @@
 
 #include "message.h"
 
+DR::Message::Message(const Serial& se) {
+    deserialize(se);
+}
+
 DR::Message::Message(std::string type, Serial&& body) : type(type), body(std::move(body)) {}
 
 DR::Serial DR::Message::serialize(Serial& o) const noexcept {

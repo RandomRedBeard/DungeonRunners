@@ -10,6 +10,8 @@
  */
 #include "player.h"
 
+DR::Player::Player() {}
+
 DR::Player::Player(OID id) : id(id) {}
 
 DR::Serial DR::Player::serialize(Serial& o) const noexcept {

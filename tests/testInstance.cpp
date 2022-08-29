@@ -25,7 +25,18 @@ void testInstance() {
     i.print();
 }
 
+void testJson() {
+    Instance i(OID::generate(), Map(80, 25, 3, 3));
+    i.generateMonsters(10);
+
+    Instance t;
+    t.deserialize(i.newSerialize());
+
+    assert(t.getMonsters().size() == i.getMonsters().size());
+}
+
 int main() {
     testInstance();
+    testJson();
     return 0;
 }

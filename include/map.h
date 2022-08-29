@@ -83,6 +83,7 @@ namespace DR {
 
         Map();
         Map(Map&& m) = default;
+        Map& operator=(Map&& m) = default;
         Map(unsigned int width, unsigned int height, unsigned int rcols, unsigned int rrows);
 
         unsigned int getHeight() const noexcept { return height; }
