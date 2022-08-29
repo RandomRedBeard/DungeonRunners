@@ -9,19 +9,25 @@
  *
  */
 
-#include <boost/asio/thread_pool.hpp>
 #include <boost/asio.hpp>
-#include <boost/json.hpp>
-#include <point.h>
-#include <iostream>
-#include <string>
-#include <assert.h>
-#include <instance.h>
-#include <message.h>
-#include <player.h>
-#include <cstring>
-#include <chrono>
+#include <boost/function.hpp>
 
+#include <iostream>
+#include <thread>
+#include <chrono>
+#include <mutex>
+
+#include <assert.h>
+
+#include <message.h>
+#include <arg.h>
+#include <mapPathfinder.h>
+#include <instance.h>
+#include <map.h>
+#include <pathfinder.h>
+#include <cGraphics.h>
+#include <player.h>
+#include <monster.h>
 
 #define PL_INST_JN_REQ "PlayerJoinInstance"
 
