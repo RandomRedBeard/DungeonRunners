@@ -22,20 +22,28 @@
 
 namespace DR {
     class Monster : public HasId, public Serializable {
-        OID id;
+        boost::uuids::uuid id;
         std::string name;
         Point pt;
+        int health;
+        int maxHealth;
         PointPath path;
         int speed = NORMAL;
         std::chrono::steady_clock::time_point last_moved;
     public:
         Monster();
-        Monster(OID id, std::string name);
+        Monster(boost::uuids::uuid id, std::string name);
 
-        const OID getId() const noexcept { return id; }
+        const boost::uuids::uuid getId() const noexcept { return id; }
 
         void setPoint(Point pt) noexcept { this->pt = pt; }
         Point getPoint() const noexcept { return pt; };
+
+        void setHealth(int health) { this->health = maxHealth = health; }
+        int takeDamage(int hp) { return this->health -= hp; }
+        int getHealth() const noexcept { return health; }
+        int getMaxHealth() const noexcept { return maxHealth; }
+        bool isAlive() const noexcept { return health > 0; }
 
         void setPath(PointPath path) { this->path = path; }
         PointPath getPath() { return path; }

@@ -14,21 +14,20 @@
 #include <string>
 
 #include <hasid.h>
-#include <oid.h>
 #include <serializable.h>
 #include <point.h>
 
 namespace DR {
     class Player : public HasId, public Serializable {
-        OID id;
+        boost::uuids::uuid id;
         Point pt;
         std::string name;
     public:
         Player();
-        Player(OID id);
+        Player(boost::uuids::uuid id);
 
-        void setId(OID id) { this->id = id; }
-        const OID getId() const noexcept { return id; }
+        void setId(boost::uuids::uuid id) { this->id = id; }
+        const boost::uuids::uuid getId() const noexcept { return id; }
 
         void setName(std::string name) noexcept { this->name = name; }
         std::string getName() const noexcept { return name; }

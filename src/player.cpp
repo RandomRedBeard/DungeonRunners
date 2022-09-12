@@ -12,17 +12,17 @@
 
 DR::Player::Player() {}
 
-DR::Player::Player(OID id) : id(id) {}
+DR::Player::Player(boost::uuids::uuid id) : id(id) {}
 
 DR::Serial DR::Player::serialize(Serial& o) const noexcept {
-    id.serialize(o);
+    o.put("id", id);
     pt.serialize(o);
     o.put("name", name);
     return o;
 }
 
 void DR::Player::deserialize(const Serial& o) {
-    id.deserialize(o);
+    id = o.get<boost::uuids::uuid>("id");
     pt.deserialize(o);
     name = o.get<std::string>("name");
 }

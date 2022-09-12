@@ -11,11 +11,13 @@
 
 #pragma once
 
-#include <oid.h>
+#include <boost/uuid/uuid.hpp>
+#include <boost/uuid/random_generator.hpp>
+#include <boost/uuid/uuid_io.hpp>
 
 namespace DR {
     class HasId {
     public:
-        virtual const OID getId() const noexcept = 0;
+        virtual const boost::uuids::uuid getId() const noexcept = 0;
     };
 }

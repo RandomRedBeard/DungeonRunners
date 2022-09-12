@@ -19,7 +19,6 @@
 #include <monster.h>
 #include <player.h>
 #include <map.h>
-#include <oid.h>
 #include <mapPathfinder.h>
 
 namespace DR {
@@ -28,11 +27,11 @@ namespace DR {
      *
      */
     class Instance : public Serializable {
-        OID id;
+        boost::uuids::uuid id;
         // DMLayer will not own players
-        std::map<OID, std::shared_ptr<Player>> players;
+        std::map<boost::uuids::uuid, std::shared_ptr<Player>> players;
         // This will own the monsters and map
-        std::map<OID, std::shared_ptr<Monster>> monsters;
+        std::map<boost::uuids::uuid, std::shared_ptr<Monster>> monsters;
         Map pmap;
 
         // Map for unique cell placement
@@ -41,18 +40,21 @@ namespace DR {
     public:
         Instance();
         // Take ownership of map
-        Instance(OID id, Map&& pmap);
+        Instance(boost::uuids::uuid id, Map&& pmap);
         Instance(Instance&& instance) = default;
         Instance& operator=(Instance&& instance) = default;
         virtual ~Instance();
 
-        const OID getId() const noexcept { return id; }
+        const boost::uuids::uuid getId() const noexcept { return id; }
 
         void addPlayer(std::shared_ptr<Player> p, Point pt);
-        int removePlayer(OID id);
-        const std::map<OID, std::shared_ptr<Player>>& getPlayers() const noexcept { return players; }
+        int removePlayer(boost::uuids::uuid id);
+        const std::map<boost::uuids::uuid, std::shared_ptr<Player>>& getPlayers() const noexcept { return players; }
 
-        void generateMonsters(int n);
+        void addMonster(std::shared_ptr<Monster> m, Point pt);
+        int removeMonster(boost::uuids::uuid id);
+        const std::map<boost::uuids::uuid, std::shared_ptr<Monster>>& getMonsters() const noexcept { return monsters; }
+
 
         /**
          * @brief pmap.rand_point + unique_cell consideration
@@ -76,8 +78,10 @@ namespace DR {
         bool walkable(int index) const noexcept;
         bool walkable(Point pt) const noexcept;
 
+        std::shared_ptr<HasId> getCell(int index) const noexcept;
+        std::shared_ptr<HasId> getCell(Point pt) const noexcept;
+
         const Map* getMap() const noexcept { return &pmap; }
-        const std::map<OID, std::shared_ptr<Monster>>& getMonsters() const noexcept { return monsters; }
 
         Serial serialize(Serial& o) const noexcept;
         void deserialize(const Serial& o);

@@ -15,10 +15,10 @@
 using namespace DR;
 
 void testInstance() {
+    boost::uuids::random_generator idGen;
     Map m(80, 25, 3, 3);
-    Instance i(OID::generate(), std::move(m));
-    i.generateMonsters(10);
-    auto p = std::make_shared<Player>(OID::generate());
+    Instance i(idGen(), std::move(m));
+    auto p = std::make_shared<Player>(idGen());
     p->setPoint(i.randPoint());
     i.addPlayer(p, p->getPoint());
 
@@ -26,13 +26,11 @@ void testInstance() {
 }
 
 void testJson() {
-    Instance i(OID::generate(), Map(80, 25, 3, 3));
-    i.generateMonsters(10);
+    boost::uuids::random_generator idGen;
+    Instance i(idGen(), Map(80, 25, 3, 3));
 
     Instance t;
     t.deserialize(i.newSerialize());
-
-    assert(t.getMonsters().size() == i.getMonsters().size());
 }
 
 int main() {

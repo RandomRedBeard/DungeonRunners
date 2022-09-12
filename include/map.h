@@ -22,7 +22,6 @@
 #include <hallway.h>
 #include <pathfinder.h>
 #include <pointpath.h>
-#include <oid.h>
 
 namespace DR {
 

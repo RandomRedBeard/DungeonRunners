@@ -15,8 +15,8 @@ using namespace std;
 using namespace DR;
 
 void testMonster() {
-    srand(time(0));
-    Monster mo(OID::generate(), "Ice Monster");
+    boost::uuids::random_generator idGen;
+    Monster mo(idGen(), "Ice Monster");
     mo.setLastMoved(chrono::steady_clock::now());
     mo.setSpeed(500 * (1 + rand() % 3));
 
@@ -25,4 +25,5 @@ void testMonster() {
 
 int main() {
     testMonster();
-}
+    return 0;
+}   

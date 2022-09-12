@@ -11,10 +11,10 @@
 
 #include "instance.h"
 
-// Do nothing for deserialization
+ // Do nothing for deserialization
 DR::Instance::Instance() {}
 
-DR::Instance::Instance(OID id, Map&& pmap) : id(id), pmap(std::move(pmap)) {}
+DR::Instance::Instance(boost::uuids::uuid id, Map&& pmap) : id(id), pmap(std::move(pmap)) {}
 
 DR::Instance::~Instance() {
 }
@@ -32,7 +32,7 @@ void DR::Instance::addPlayer(std::shared_ptr<Player> p, Point pt) {
     uniqueCells.insert({ pt.index(pmap.getWidth()), p });
 }
 
-int DR::Instance::removePlayer(OID id) {
+int DR::Instance::removePlayer(boost::uuids::uuid id) {
     auto p = players.find(id);
     if (p == players.end()) {
         return -1;
@@ -41,18 +41,18 @@ int DR::Instance::removePlayer(OID id) {
     return players.erase(id);
 }
 
-void DR::Instance::generateMonsters(int n) {
-    for (int i = 0; i < n; i++) {
-        std::shared_ptr<Monster> m = std::make_shared<Monster>(OID::generate(), "Ice Monster");
-        Point pt = randPoint();
-        m->setPoint(pt);
-        m->setLastMoved(std::chrono::steady_clock::now());
-        m->setSpeed(500 * (1 + rand() % 3));
+void DR::Instance::addMonster(std::shared_ptr<Monster> m, Point pt) {
+    monsters.insert({ m->getId(), m });
+    uniqueCells.insert({ pt.index(pmap.getWidth()), m });
+}
 
-        // Add to containers
-        monsters.insert({ m->getId(), m });
-        uniqueCells.insert({ pt.index(pmap.getWidth()), m });
+int DR::Instance::removeMonster(boost::uuids::uuid id) {
+    auto m = monsters.find(id);
+    if (m == monsters.end()) {
+        return -1;
     }
+    uniqueCells.erase(m->second->getPoint().index(pmap.getWidth()));
+    return monsters.erase(id);
 }
 
 bool DR::Instance::move(std::shared_ptr<HasId> o, Point src, Point dest) {
@@ -73,8 +73,20 @@ bool DR::Instance::walkable(Point pt) const noexcept {
     return walkable(pt.index(pmap.getWidth()));
 }
 
+std::shared_ptr<DR::HasId> DR::Instance::getCell(int index) const noexcept {
+    auto i = uniqueCells.find(index);
+    if (i == uniqueCells.end()) {
+        return std::shared_ptr<HasId>();
+    }
+    return i->second;
+}
+
+std::shared_ptr<DR::HasId> DR::Instance::getCell(Point pt) const noexcept {
+    return getCell(pt.index(pmap.getWidth()));
+}
+
 DR::Serial DR::Instance::serialize(Serial& o) const noexcept {
-    id.serialize(o);
+    o.put("id", id);
     Serial playersJson;
     for (auto& p : players) {
         playersJson.push_back({ "", p.second->newSerialize() });
@@ -94,7 +106,7 @@ DR::Serial DR::Instance::serialize(Serial& o) const noexcept {
 }
 
 void DR::Instance::deserialize(const Serial& o) {
-    id.deserialize(o);
+    id = o.get<boost::uuids::uuid>("id");
 
     pmap.deserialize(o.get_child("map"));
 

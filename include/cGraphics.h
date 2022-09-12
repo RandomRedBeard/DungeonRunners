@@ -60,5 +60,8 @@ namespace DR {
         int putHallway(std::string win, const Hallway h, char c);
         int putMap(std::string win, const Map& m, const CGraphicsRoomConfig cfg, char h);
         int cgetch(std::string win);
+
+        void setLogger(const Rect r);
+        int log(const char* fmt, ...);
     };
 }

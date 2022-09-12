@@ -171,3 +171,40 @@ int DR::CGraphics::cgetch(std::string win) {
 
     return wgetch(iter->second);
 }
+
+
+void DR::CGraphics::setLogger(const Rect r) {
+    logger = newwin(r.h, r.w, r.y, r.x);
+}
+
+int DR::CGraphics::log(const char* fmt, ...) {
+    WINDOW* w = logger;
+    if (!w) {
+        return -1;
+    }
+
+    va_list args;
+    va_start(args, fmt);
+    int len = vsnprintf(nullptr, 0, fmt, args);
+    va_end(args);
+
+    va_start(args, fmt);
+    char* buf = (char*)malloc(len + 1);
+    vsnprintf(buf, len + 1, fmt, args);
+    va_end(args);
+
+    int max_y = getmaxx(w);
+    int lines_to_print = (len / max_y) + 1;
+
+    for (int i = 0; i < lines_to_print; i++) {
+        wmove(w, 0, 0);
+        winsertln(w);
+    }
+
+    mvwaddstr(w, 0, 0, buf);
+    free(buf);
+
+    wrefresh(w);
+
+    return len;
+}

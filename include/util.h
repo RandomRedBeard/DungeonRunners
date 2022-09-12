@@ -14,6 +14,7 @@
 #include <cstdlib>
 
 namespace DR {
+
     enum Speed {
         SLOW = 1500,
         NORMAL = 1000,
@@ -53,4 +54,5 @@ namespace DR {
     static inline int isBitFlipped(const char* v, int i) {
         return *(v + (i / 8)) & (1 << (i % 8));
     }
+
 }

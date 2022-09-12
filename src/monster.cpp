@@ -13,10 +13,10 @@
 
 DR::Monster::Monster() {}
 
-DR::Monster::Monster(OID id, std::string name) : id(id), name(name) {}
+DR::Monster::Monster(boost::uuids::uuid id, std::string name) : id(id), name(name) {}
 
 DR::Serial DR::Monster::serialize(Serial& o) const noexcept {
-    id.serialize(o);
+    o.put("id", id);
     o.put("name", name);
     pt.serialize(o);
     o.put("speed", speed);
@@ -24,7 +24,7 @@ DR::Serial DR::Monster::serialize(Serial& o) const noexcept {
 }
 
 void DR::Monster::deserialize(const Serial& o) {
-    id.deserialize(o);
+    id = o.get<boost::uuids::uuid>("id");
     name = o.get<std::string>("name");
     pt.deserialize(o);
     o.get<int>("speed", speed);
