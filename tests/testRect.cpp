@@ -10,13 +10,10 @@
  */
 
 #include <iostream>
-#include <assert.h>
-
 
 #include <rect.h>
 
-using namespace std;
-using namespace DR;
+#include "testUtil.h"
 
 void testCmp() {
     Rect r(0, 0, 12, 12);

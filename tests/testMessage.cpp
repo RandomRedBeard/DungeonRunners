@@ -12,9 +12,11 @@
 #include <message.h>
 #include <point.h>
 
+#include "testUtil.h"
+
 void testMessage() {
-    DR::Serial o = DR::Point().newSerialize();
-    DR::Message m("point", std::move(o));
+    Serial o = Point().newSerialize();
+    Message m("point", std::move(o));
 
     m.print();
 }

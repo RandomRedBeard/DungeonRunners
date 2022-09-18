@@ -10,12 +10,10 @@
  */
 
 #include <iostream>
-#include <assert.h>
 
 #include <room.h>
 
-using namespace std;
-using namespace DR;
+#include "testUtil.h"
 
 int main() {
 }

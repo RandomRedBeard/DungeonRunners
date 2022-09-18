@@ -15,6 +15,10 @@ DR::Monster::Monster() {}
 
 DR::Monster::Monster(boost::uuids::uuid id, std::string name) : id(id), name(name) {}
 
+int DR::Monster::takeDamage(int dmg) {
+    return health -= dmg;
+}
+
 DR::Serial DR::Monster::serialize(Serial& o) const noexcept {
     o.put("id", id);
     o.put("name", name);

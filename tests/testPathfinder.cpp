@@ -9,18 +9,18 @@
  *
  */
 
-#include <assert.h>
-
 #include <map.h>
 #include <pathfinder.h>
 
+#include "testUtil.h"
+
 void testSamePoint() {
-    DR::Map m(80, 25, 3, 3);
-    DR::Pathfinder p = m.getPathfinder();
+    Map m(80, 25, 3, 3);
+    Pathfinder p = m.getPathfinder();
 
-    DR::Point r = m.randPoint();
+    Point r = m.randPoint();
 
-    std::stack<int> path = p.findPath(r.index(m.getWidth()), r.index(m.getWidth()));
+    stack<int> path = p.findPath(r.index(m.getWidth()), r.index(m.getWidth()));
     assert(path.empty());
 }
 

@@ -172,6 +172,17 @@ int DR::CGraphics::cgetch(std::string win) {
     return wgetch(iter->second);
 }
 
+int DR::CGraphics::putHUD(std::string win, std::shared_ptr<Player> p) {
+    std::map<std::string, WINDOW*>::iterator iter = windows.find(win);
+    if (iter == windows.end()) {
+        return -1;
+    }
+
+    int maxy = getmaxy(iter->second);
+    mvwprintw(iter->second, maxy - 2, 1, "%s %d(%d)", p->getName().c_str(), p->getHealth(), p->getMaxHealth());
+    wrefresh(iter->second);
+    return 0;
+}
 
 void DR::CGraphics::setLogger(const Rect r) {
     logger = newwin(r.h, r.w, r.y, r.x);

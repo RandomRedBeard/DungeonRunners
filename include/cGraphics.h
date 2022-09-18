@@ -22,6 +22,7 @@
 #include <room.h>
 #include <map.h>
 #include <hallway.h>
+#include <player.h>
 
 #define CGRAPHICS_STDSCR "stdscr"
 
@@ -60,6 +61,8 @@ namespace DR {
         int putHallway(std::string win, const Hallway h, char c);
         int putMap(std::string win, const Map& m, const CGraphicsRoomConfig cfg, char h);
         int cgetch(std::string win);
+
+        int putHUD(std::string win, const std::shared_ptr<Player> p);
 
         void setLogger(const Rect r);
         int log(const char* fmt, ...);

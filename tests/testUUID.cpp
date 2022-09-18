@@ -12,15 +12,17 @@
 #include <hasid.h>
 #include <serializable.h>
 
+#include "testUtil.h"
+
 void testUuid() {
     boost::uuids::random_generator idGen;
     boost::uuids::uuid id;
-    DR::Serial o;
+    Serial o;
 
     o.put("id", idGen());
     id = o.get<boost::uuids::uuid>("id");
 
-    std::cout << id << std::endl;
+    cout << id << endl;
 
 }
 int main() {

@@ -36,11 +36,14 @@ namespace DR {
 
         const boost::uuids::uuid getId() const noexcept { return id; }
 
+        void setName(std::string name) noexcept { this->name = name; }
+        std::string getName() const noexcept { return name; }
+
         void setPoint(Point pt) noexcept { this->pt = pt; }
         Point getPoint() const noexcept { return pt; };
 
         void setHealth(int health) { this->health = maxHealth = health; }
-        int takeDamage(int hp) { return this->health -= hp; }
+        int takeDamage(int dmg);
         int getHealth() const noexcept { return health; }
         int getMaxHealth() const noexcept { return maxHealth; }
         bool isAlive() const noexcept { return health > 0; }

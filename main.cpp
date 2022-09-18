@@ -9,9 +9,6 @@
  *
  */
 
-#include <boost/asio.hpp>
-#include <boost/function.hpp>
-
 #include <iostream>
 #include <thread>
 #include <chrono>
@@ -56,6 +53,10 @@ void monsterThread(CGraphics* g, Instance* inst, shared_ptr<Player> p, mutex* mu
         auto now = chrono::steady_clock::now();
         lock_guard<mutex> lock(*mu);
 
+        if (!p->isAlive()) {
+            continue;
+        }
+
         for (auto& pa : inst->getMonsters()) {
             shared_ptr<Monster> me = pa.second;
             auto i_millis = std::chrono::duration_cast<std::chrono::milliseconds>(now - me->getLastMoved());
@@ -72,10 +73,21 @@ void monsterThread(CGraphics* g, Instance* inst, shared_ptr<Player> p, mutex* mu
             PointPath path = pf.findPath(me->getPoint(), p->getPoint());
 
             if (path.empty()) {
+                g->log("Empty Path %d", me->getPoint().l1dist(p->getPoint()));
                 continue;
             }
 
             Point dest = path.top();
+            auto cell = inst->getCell(dest);
+            if (cell) {
+                shared_ptr<Player> target = std::dynamic_pointer_cast<Player>(cell);
+                if (target) {
+                    target->takeDamage(2);
+                    g->log("Player %s %d(%d)", boost::uuids::to_string(target->getId()).c_str(), target->getHealth(), target->getMaxHealth());
+                    g->putHUD("map", p);
+                }
+                continue;
+            }
 
             if (!inst->move(me, me->getPoint(), dest)) {
                 continue;
@@ -115,6 +127,8 @@ int main(int argc, char** argv) {
     c.putMap("map", *pmap, CGraphicsRoomConfig(), '#');
 
     shared_ptr<Player> p = make_shared<Player>(idGen());
+    p->setName("Player");
+    p->setHealth(10);
     Point pt = inst.randPoint();
     p->setPoint(pt);
     inst.addPlayer(p, pt);
@@ -124,6 +138,7 @@ int main(int argc, char** argv) {
     thread mt(monsterThread, &c, &inst, p, &mu);
 
     c.put("map", p->getPoint(), '@');
+    c.putHUD("map", p);
 
     MEVENT e;
     int i;
@@ -142,6 +157,9 @@ int main(int argc, char** argv) {
         case 'w':
             d = UP;
             break;
+        case ' ':
+            p->setHealth(10);
+            break;
         }
 
         if (d == NONE) {
@@ -149,6 +167,12 @@ int main(int argc, char** argv) {
         }
 
         lock_guard<mutex> lock(mu);
+
+        if (!p->isAlive()) {
+            c.log("You are dead");
+            continue;
+        }
+        
         Point dest = p->getPoint().move(d);
         auto cell = inst.getCell(dest);
         if (cell) {

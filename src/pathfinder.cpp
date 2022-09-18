@@ -68,7 +68,7 @@ std::stack<int> DR::Pathfinder::findPath(int src, int dest) const noexcept {
     }
 
     // fill out rpath
-    int i = rmap[dest];
+    int i = dest;
     while (i != src) {
         rpath.push(i);
         i = rmap[i];

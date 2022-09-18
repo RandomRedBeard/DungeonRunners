@@ -21,6 +21,8 @@ namespace DR {
     class Player : public HasId, public Serializable {
         boost::uuids::uuid id;
         Point pt;
+        int health;
+        int maxHealth;
         std::string name;
     public:
         Player();
@@ -34,6 +36,12 @@ namespace DR {
 
         void setPoint(Point pt) noexcept { this->pt = pt; }
         Point getPoint() const noexcept { return pt; };
+
+        void setHealth(int health) { this->health = maxHealth = health; }
+        int takeDamage(int dmg);
+        int getHealth() const noexcept { return health; }
+        int getMaxHealth() const noexcept { return maxHealth; }
+        bool isAlive() const noexcept { return health > 0; }
 
         Serial serialize(Serial& o) const noexcept;
         void deserialize(const Serial& o);

@@ -382,31 +382,31 @@ void test_input_thread(Client* client) {
 
 int main() {
     boost::uuids::random_generator idGen;
-    Instance inst(idGen(), Map(80, 25, 3, 3));
-    boost::asio::io_context ctx;
-    auto addr = boost::asio::ip::make_address("127.0.0.1");
-    auto ep = boost::asio::ip::tcp::endpoint(addr, 8080);
+    // Instance inst(idGen(), Map(80, 25, 3, 3));
+    // boost::asio::io_context ctx;
+    // auto addr = boost::asio::ip::make_address("127.0.0.1");
+    // auto ep = boost::asio::ip::tcp::endpoint(addr, 8080);
 
-    Server server(&ctx, ep, move(inst));
-    server.asyncAccept();
-    Player p1, p2;
-    p1.setName("Thomas");
-    p2.setName("Also Thomas");
-    Client cl1(&p1, &ctx, ep);
+    // Server server(&ctx, ep, move(inst));
+    // server.asyncAccept();
+    // Player p1, p2;
+    // p1.setName("Thomas");
+    // p2.setName("Also Thomas");
+    // Client cl1(&p1, &ctx, ep);
 
-    thread ithread(&test_input_thread, &cl1);
-    Client cl2(&p2, &ctx, ep);
+    // thread ithread(&test_input_thread, &cl1);
+    // Client cl2(&p2, &ctx, ep);
 
-    thread t1(&io_thread, &ctx);
-    thread t2(&io_thread, &ctx);
+    // thread t1(&io_thread, &ctx);
+    // thread t2(&io_thread, &ctx);
 
-    ctx.run();
+    // ctx.run();
 
-    cl1.close();
-    cl2.close();
-    server.close();
-    t1.join();
-    t2.join();
+    // cl1.close();
+    // cl2.close();
+    // server.close();
+    // t1.join();
+    // t2.join();
 
     return 0;
 }

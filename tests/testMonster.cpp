@@ -11,8 +11,7 @@
 
 #include <monster.h>
 
-using namespace std;
-using namespace DR;
+#include "testUtil.h"
 
 void testMonster() {
     boost::uuids::random_generator idGen;

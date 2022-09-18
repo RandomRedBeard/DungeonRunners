@@ -10,9 +10,8 @@
  */
 
 #include <instance.h>
-#include <assert.h>
 
-using namespace DR;
+#include "testUtil.h"
 
 void testInstance() {
     boost::uuids::random_generator idGen;

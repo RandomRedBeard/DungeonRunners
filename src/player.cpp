@@ -14,6 +14,10 @@ DR::Player::Player() {}
 
 DR::Player::Player(boost::uuids::uuid id) : id(id) {}
 
+int DR::Player::takeDamage(int dmg) {
+    return health -= dmg;
+}
+
 DR::Serial DR::Player::serialize(Serial& o) const noexcept {
     o.put("id", id);
     pt.serialize(o);

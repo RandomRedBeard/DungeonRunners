@@ -9,13 +9,13 @@
  *
  */
 
-#include <assert.h>
-
 #include <arg.h>
+
+#include "testUtil.h"
 
 void testArg() {
     char* argv[] = { (char*)"bin", (char*)"-w",(char*)"10",(char*)"--flag" };
-    DR::ArgParser parser;
+    ArgParser parser;
     parser.addLong("w");
     parser.addFlag("flag");
 

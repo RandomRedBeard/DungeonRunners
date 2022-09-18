@@ -16,8 +16,7 @@
 #include <boost/uuid/uuid_io.hpp>
 
 namespace DR {
-    class HasId {
-    public:
+    struct HasId {
         virtual const boost::uuids::uuid getId() const noexcept = 0;
     };
 }

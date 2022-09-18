@@ -19,7 +19,7 @@ endif()
 if (NOT MSVC)
     set(DR_LINKS m)
 else()
-    set(DR_LINKS rpcrt4.lib)
+
 endif()
 
 if (MSVC)
@@ -67,7 +67,7 @@ target_link_libraries(DR ${DR_LINKS})
 set(DR_LINKS ${DR_LINKS} DR)
 
 # Run all tests in tests directory
-file(GLOB files tests/*)
+file(GLOB files tests/*.cpp)
 foreach(file ${files})
     get_filename_component(tname ${file} NAME_WLE)
     add_executable(${tname} ${file})

@@ -10,12 +10,10 @@
  */
 
 #include <iostream>
-#include <assert.h>
 
 #include <map.h>
 
-using namespace std;
-using namespace DR;
+#include "testUtil.h"
 
 class Wrap {
 	map<int, string> m;

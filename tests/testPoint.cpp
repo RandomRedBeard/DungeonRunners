@@ -10,12 +10,10 @@
  */
 
 #include <iostream>
-#include <assert.h>
 
 #include <point.h>
 
-using namespace std;
-using namespace DR;
+#include "testUtil.h"
 
 void testConstructor() {
     Point pt;
@@ -69,7 +67,7 @@ void testAssignment() {
 }
 
 void test_rand() {
-    DR::Point pt = DR::Point::rand(10, 10);
+    Point pt = Point::rand(10, 10);
 }
 
 int main() {
